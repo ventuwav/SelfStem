@@ -1,6 +1,6 @@
 """Automatic functional song-section analysis.
 
-The semantic model runs after Demucs and consumes four stems. StemDeck uses
+The semantic model runs after Demucs and consumes four stems. SelfStem uses
 the six-stem model, so guitar, piano, and other are summed into a temporary
 float WAV before an isolated worker performs inference. Every external result
 is treated as untrusted data and normalized into the existing editable
@@ -32,7 +32,7 @@ from app.core.config import (
 from app.core.models import Job, JobCancelled
 from app.core.registry import set_proc
 
-logger = logging.getLogger("stemdeck.sections")
+logger = logging.getLogger("selfstem.sections")
 
 _KINDS = frozenset(("intro", "outro", "break", "bridge", "inst", "solo", "verse", "chorus", "part"))
 _SENTINELS = frozenset(("start", "end"))
@@ -217,7 +217,7 @@ def _run_registered_process(job: Job, cmd: list[str]) -> tuple[int, list[str], l
     # The worker arms a watchdog on this and hard-exits when we disappear, so a
     # kill that runs no cleanup (SIGKILL, Force Quit, Task Manager, a crash)
     # cannot leave it running with nobody to collect the result (#519).
-    env["STEMDECK_PARENT_PID"] = str(os.getpid())
+    env["SELFSTEM_PARENT_PID"] = str(os.getpid())
     env["PYTHONIOENCODING"] = "utf-8:replace"
     proc = subprocess.Popen(
         cmd,

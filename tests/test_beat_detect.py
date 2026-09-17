@@ -39,7 +39,7 @@ def _onset_env(hit_times, seconds=10.0, sr=BEATGRID_SR):
 
 
 def test_librosa_forced_skips_the_model(monkeypatch):
-    """STEMDECK_BEAT_DETECTOR=librosa must not even attempt to load weights."""
+    """SELFSTEM_BEAT_DETECTOR=librosa must not even attempt to load weights."""
     monkeypatch.setattr(bd, "BEAT_DETECTOR", "librosa")
     called = []
     monkeypatch.setattr(bd, "_get_model", lambda: called.append(1) or None)

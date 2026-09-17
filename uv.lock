@@ -2787,7 +2787,7 @@ wheels = [
 ]
 
 [[package]]
-name = "stemdeck"
+name = "selfstem"
 source = { editable = "." }
 dependencies = [
     { name = "all-in-one-infer" },

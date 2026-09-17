@@ -320,7 +320,7 @@ async def test_pipeline_success_logs_timing_summary(tmp_path: Path, caplog):
 
     with (
         patch("app.pipeline.runner._run_blocking", side_effect=fake_stages),
-        caplog.at_level(logging.INFO, logger="stemdeck.pipeline"),
+        caplog.at_level(logging.INFO, logger="selfstem.pipeline"),
     ):
         await run_pipeline(job, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", tmp_path)
 
@@ -532,7 +532,7 @@ def test_common_pipeline_keeps_section_failure_nonfatal(tmp_path: Path, caplog):
         patches[6],
         patches[7],
         patches[8],
-        caplog.at_level("ERROR", logger="stemdeck.pipeline"),
+        caplog.at_level("ERROR", logger="selfstem.pipeline"),
     ):
         _run_common(job, job_dir / "source.wav", job_dir)
 

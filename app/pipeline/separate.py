@@ -17,7 +17,7 @@ from app.core.registry import set_proc
 from app.core.settings import get_demucs_device, get_separation_quality
 from app.pipeline.errors import SeparationError, classify_failure
 
-logger = logging.getLogger("stemdeck.pipeline")
+logger = logging.getLogger("selfstem.pipeline")
 
 _PCT_RE = re.compile(r"(\d{1,3})%")
 # Terminate demucs if stderr produces no output for this many seconds.
@@ -68,7 +68,7 @@ def _get_worker(device: str) -> subprocess.Popen:
     # Our pid, not whatever the backend inherited: the worker watches this and
     # exits when we are gone, so it cannot be left holding a GPU after a kill
     # that ran no cleanup (SIGKILL, Force Quit, Task Manager, a crash).
-    env["STEMDECK_PARENT_PID"] = str(os.getpid())
+    env["SELFSTEM_PARENT_PID"] = str(os.getpid())
     # Pin the child's stdio encoding to match what the parent now decodes with.
     # Without it a Windows child writes cp1252 while the parent reads utf-8, so
     # the mismatch simply moves rather than being fixed. Demucs and audio-

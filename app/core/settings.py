@@ -3,7 +3,7 @@
 These are read live (unlike the env-var constants in config.py, which are fixed
 at startup), so the Settings UI can change them without a restart:
 
-- `allow_network`     — whether StemDeck answers requests from other devices.
+- `allow_network`     — whether SelfStem answers requests from other devices.
 - `max_duration_sec`  — longest track accepted for processing.
 - `jobs_dir`          — where extracted stems are written (needs a restart).
 - `playlist_max_items` — how many tracks one playlist import may queue.
@@ -38,7 +38,7 @@ from app.core.config import (
     detect_torch_device,
 )
 
-_log = logging.getLogger("stemdeck.settings")
+_log = logging.getLogger("selfstem.settings")
 
 _SETTINGS_PATH = DATA_DIR / "settings.json"
 _LOCK = threading.RLock()
@@ -62,22 +62,22 @@ DEFAULT_EXPORT_SAMPLE_RATE = 44100
 
 
 def _default_allow_network() -> bool:
-    # STEMDECK_ALLOW_NETWORK takes precedence when set explicitly.
+    # SELFSTEM_ALLOW_NETWORK takes precedence when set explicitly.
     # Otherwise: desktop keeps network off (user opts in via UI toggle);
     # server/Docker deployments open it by default since network access is
     # the entire point of a headless deployment.
-    env = os.environ.get("STEMDECK_ALLOW_NETWORK")
+    env = os.environ.get("SELFSTEM_ALLOW_NETWORK")
     if env is not None:
         return env.strip() == "1"
-    return os.environ.get("STEMDECK_DESKTOP") != "1"
+    return os.environ.get("SELFSTEM_DESKTOP") != "1"
 
 
 def _mirror_path() -> Path | None:
     """Where the per-user copy lives, or None when the shell did not set one.
 
-    The path comes from the shell (STEMDECK_SETTINGS_MIRROR) so the platform
+    The path comes from the shell (SELFSTEM_SETTINGS_MIRROR) so the platform
     logic stays in one place -- see _mirror_settings."""
-    target = os.environ.get("STEMDECK_SETTINGS_MIRROR", "").strip()
+    target = os.environ.get("SELFSTEM_SETTINGS_MIRROR", "").strip()
     return Path(target) if target else None
 
 
@@ -171,7 +171,7 @@ def _ensure() -> dict:
     if _state is None:
         _state = _load()
         # Seed the per-user copy from settings that already exist. Mirroring
-        # only on _save() would protect nobody who configured StemDeck before
+        # only on _save() would protect nobody who configured SelfStem before
         # this shipped and never opens Settings again -- their next install
         # would still start empty. Safe against recursion (_state is assigned
         # first) and against clobbering: an empty dict means a genuine first
@@ -211,7 +211,7 @@ def _mirror_settings() -> None:
 
     Best-effort by definition: this is a redundant copy, and failing to write
     it must never fail the setting the user just changed. The path comes from
-    the shell (STEMDECK_SETTINGS_MIRROR) so the platform logic stays in one
+    the shell (SELFSTEM_SETTINGS_MIRROR) so the platform logic stays in one
     place and both halves cannot drift apart.
     """
     path = _mirror_path()
@@ -249,13 +249,13 @@ def set_allow_network(value: bool) -> bool:
 # Deleting a finished separation destroys work that cannot be recovered, so the
 # behaviour of an install nobody has configured has to be "keep it". It used to
 # be the reverse: the sweep ran unless an environment variable switched it off,
-# which meant every documented way of starting StemDeck set that variable and
+# which meant every documented way of starting SelfStem set that variable and
 # anyone who started the backend directly silently lost their library within a
 # day (#459).
 #
 # The stored setting wins over the environment, unlike jobs_dir where the env
 # pin wins. A mounted volume is not the user's to relocate; how long their own
-# work is kept is exactly their call, and StemDeck is single-user with no
+# work is kept is exactly their call, and SelfStem is single-user with no
 # separate operator to protect.
 _AUTO_DELETE_DAYS_MIN, _AUTO_DELETE_DAYS_MAX = 1, 365
 AUTO_DELETE_DAYS_MIN, AUTO_DELETE_DAYS_MAX = _AUTO_DELETE_DAYS_MIN, _AUTO_DELETE_DAYS_MAX
@@ -263,13 +263,13 @@ DEFAULT_AUTO_DELETE_DAYS = 30
 
 
 def _default_auto_delete_jobs() -> bool:
-    """Only an explicit STEMDECK_PERSIST_LIBRARY=0 asks for deletion.
+    """Only an explicit SELFSTEM_PERSIST_LIBRARY=0 asks for deletion.
 
     The variable reads as "persist the library", so 0 means "do not", which is
     the one env-based way left to opt in. Unset, malformed, or 1 all mean keep,
     so a deployment that forgets it loses nothing.
     """
-    return os.environ.get("STEMDECK_PERSIST_LIBRARY", "").strip() == "0"
+    return os.environ.get("SELFSTEM_PERSIST_LIBRARY", "").strip() == "0"
 
 
 def get_auto_delete_jobs() -> bool:
@@ -290,10 +290,10 @@ def _default_auto_sections() -> bool:
 
     The stage costs a CPU inference pass per job and produces suggestions
     rather than ground truth, so nobody should pay for it without having
-    chosen to. STEMDECK_AUTO_SECTIONS=1 turns it on for a deployment that
+    chosen to. SELFSTEM_AUTO_SECTIONS=1 turns it on for a deployment that
     wants it from first boot.
     """
-    return os.environ.get("STEMDECK_AUTO_SECTIONS", "").strip() == "1"
+    return os.environ.get("SELFSTEM_AUTO_SECTIONS", "").strip() == "1"
 
 
 def get_auto_sections() -> bool:
@@ -310,14 +310,14 @@ def set_auto_sections(value: bool) -> bool:
 
 
 def _default_auto_delete_days() -> int:
-    """Honour a STEMDECK_JOB_TTL_SECONDS somebody already tuned.
+    """Honour a SELFSTEM_JOB_TTL_SECONDS somebody already tuned.
 
     That knob predates this setting and is in seconds, so it is converted and
     clamped. A TTL shorter than a day becomes one day rather than none: the
     control is in days now, and rounding someone's one-hour sweep down to zero
     would turn a deliberately aggressive setting into a much slower one.
     """
-    raw = os.environ.get("STEMDECK_JOB_TTL_SECONDS", "").strip()
+    raw = os.environ.get("SELFSTEM_JOB_TTL_SECONDS", "").strip()
     if raw:
         try:
             days = round(int(raw) / 86400) or _AUTO_DELETE_DAYS_MIN
@@ -521,13 +521,13 @@ def set_export_sample_rate(value: int) -> int:
 # Compute device for stem separation. "auto" (default) resolves to the best
 # available device via a hardware probe at job time; "cuda"/"mps"/"cpu" force
 # it. Read live per job (app/pipeline/separate.py), so changes apply to the
-# NEXT separation without a restart. STEMDECK_DEMUCS_DEVICE seeds the default
+# NEXT separation without a restart. SELFSTEM_DEMUCS_DEVICE seeds the default
 # so existing env-based deployments keep their forced device.
 _DEVICE_CHOICES = ("auto", "cuda", "mps", "cpu")
 
 
 def _default_demucs_device() -> str:
-    env = os.environ.get("STEMDECK_DEMUCS_DEVICE", "").strip().lower()
+    env = os.environ.get("SELFSTEM_DEMUCS_DEVICE", "").strip().lower()
     return env if env in ("cuda", "mps", "cpu") else "auto"
 
 
@@ -567,13 +567,13 @@ def set_demucs_device(value: str) -> str:
 # re-runs separation on a randomly time-shifted copy of the input and
 # averages the two -- measurably cleaner stems, at ~2x the separation time.
 # Applies on any device; a CPU user who picks "best" is accepting the wait
-# knowingly. STEMDECK_SEPARATION_QUALITY seeds the default so existing
+# knowingly. SELFSTEM_SEPARATION_QUALITY seeds the default so existing
 # env-based deployments can force it.
 _QUALITY_CHOICES = ("standard", "best")
 
 
 def _default_separation_quality() -> str:
-    env = os.environ.get("STEMDECK_SEPARATION_QUALITY", "").strip().lower()
+    env = os.environ.get("SELFSTEM_SEPARATION_QUALITY", "").strip().lower()
     return env if env in _QUALITY_CHOICES else "standard"
 
 

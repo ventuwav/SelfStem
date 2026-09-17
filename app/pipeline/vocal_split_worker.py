@@ -7,7 +7,7 @@ the hot path every job takes, so there is no repeat-model-load cost worth
 amortizing (see ml-pipeline.md / #309 for why that reasoning does not apply
 here the way it does to Demucs).
 
-Runs UVR-MDX-NET Karaoke 2 (or STEMDECK_KARAOKE_MODEL's override) via the
+Runs UVR-MDX-NET Karaoke 2 (or SELFSTEM_KARAOKE_MODEL's override) via the
 `audio-separator` package on an already-isolated vocals stem, producing
 lead_vocals.wav + backing_vocals.wav in out_dir.
 

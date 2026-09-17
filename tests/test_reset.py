@@ -65,7 +65,7 @@ def test_reset_endpoint_works_without_desktop_mode(client, monkeypatch, tmp_path
     """Available in server mode too -- gated by the same network_gate
     middleware every other settings-mutating endpoint already relies on, not
     a desktop-only restriction."""
-    monkeypatch.delenv("STEMDECK_DESKTOP", raising=False)
+    monkeypatch.delenv("SELFSTEM_DESKTOP", raising=False)
     monkeypatch.setattr("app.main.JOBS_DIR", tmp_path)
     job = Job(id="abcdefabcded", status="done")
     _jobs[job.id] = job

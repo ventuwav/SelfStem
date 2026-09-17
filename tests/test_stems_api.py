@@ -716,7 +716,7 @@ async def test_stream_ffmpeg_logs_stderr_on_failure(caplog):
         "import sys; sys.stdout.write('partial-bytes'); sys.stdout.flush();"
         " sys.stderr.write('boom: encoder exploded\\n'); sys.exit(2)",
     ]
-    with caplog.at_level(logging.WARNING, logger="stemdeck.api"):
+    with caplog.at_level(logging.WARNING, logger="selfstem.api"):
         chunks = [c async for c in _stream_ffmpeg(cmd, context="mixdown job=test ext=wav")]
 
     assert b"".join(chunks) == b"partial-bytes"  # stream still delivered
@@ -733,7 +733,7 @@ async def test_stream_ffmpeg_clean_exit_logs_nothing(caplog):
     from app.api.stems import _stream_ffmpeg
 
     cmd = [sys.executable, "-c", "import sys; sys.stdout.write('ok')"]
-    with caplog.at_level(logging.WARNING, logger="stemdeck.api"):
+    with caplog.at_level(logging.WARNING, logger="selfstem.api"):
         chunks = [c async for c in _stream_ffmpeg(cmd, context="happy")]
 
     assert b"".join(chunks) == b"ok"
@@ -983,7 +983,7 @@ def test_prune_never_evicts_the_render_it_is_about_to_serve(tmp_path, monkeypatc
     but a single entry over budget puts the directory over on its own, so the
     loop removed it even as the newest and only file, and FileResponse was
     handed a path that no longer existed. WAV crosses the 500 MB budget at
-    about 49.5 minutes; StemDeck accepts 60.
+    about 49.5 minutes; SelfStem accepts 60.
     """
     from app.api import stems as stems_mod
 

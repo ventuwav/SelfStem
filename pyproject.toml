@@ -1,5 +1,5 @@
 [project]
-name = "stemdeck"
+name = "selfstem"
 # Version is derived from the git tag by hatch-vcs (see [tool.hatch.version]),
 # so it is never hand-edited — `git tag vX.Y.Z` is the single source of truth.
 # Builds between tags report a dev version (e.g. 0.7.0a5.dev3+g<sha>). (#169)
@@ -41,7 +41,7 @@ dependencies = [
     # Functional song-section boundaries and semantic labels (intro, verse,
     # chorus, bridge, etc.). This maintained inference-only package preserves
     # the upstream All-In-One model while replacing NATTEN's compiled extension
-    # with a cross-platform pure-PyTorch implementation. StemDeck supplies its
+    # with a cross-platform pure-PyTorch implementation. SelfStem supplies its
     # already-separated stems, so the package's Demucs path is never invoked.
     "all-in-one-infer>=3.1,<4",
     # Beat/downbeat tracker for the click track. MIT for both code and the

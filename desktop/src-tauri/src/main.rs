@@ -37,16 +37,16 @@ const SETUP_VERSION: u64 = 1;
 // The archive format differs because each platform's packaging script already
 // produces one: Compress-Archive on Windows, tar on Linux.
 #[cfg(windows)]
-const UPDATE_APP_ARCHIVE: &str = "stemdeck-update-app.zip";
+const UPDATE_APP_ARCHIVE: &str = "selfstem-update-app.zip";
 #[cfg(target_os = "linux")]
-const UPDATE_APP_ARCHIVE: &str = "stemdeck-update-app.tar.gz";
+const UPDATE_APP_ARCHIVE: &str = "selfstem-update-app.tar.gz";
 
 /// The shipped executable's filename. Defined for every platform so the
 /// leftover sweep does not need its own cfg dance.
 #[cfg(windows)]
-const APP_EXE_NAME: &str = "StemDeck.exe";
+const APP_EXE_NAME: &str = "SelfStem.exe";
 #[cfg(not(windows))]
-const APP_EXE_NAME: &str = "StemDeck";
+const APP_EXE_NAME: &str = "SelfStem";
 // Windows FFmpeg comes from BtbN's GitHub build (served via GitHub's CDN, far
 // faster worldwide than the old gyan.dev single mirror -- #248). Unlike gyan.dev,
 // which published a per-file `{url}.sha256` companion, BtbN publishes ONE combined
@@ -106,7 +106,7 @@ const SHAKA_FFPROBE_SHA256_X64: &str =
     "d530823f480a3c7eb6334f18a00197d1e9f1070e86172b9aa89c4bf4022bd879";
 // Linux: a static amd64 build (ffmpeg + ffprobe in one .tar.xz) downloaded at
 // first launch, mirroring the Windows/macOS model so we never redistribute
-// FFmpeg ourselves. Overridable via STEMDECK_FFMPEG_URL. The archive unpacks to
+// FFmpeg ourselves. Overridable via SELFSTEM_FFMPEG_URL. The archive unpacks to
 // ffmpeg-<ver>-amd64-static/{ffmpeg,ffprobe}; extraction uses the system `tar`.
 #[cfg(all(unix, not(target_os = "macos")))]
 const DEFAULT_LINUX_FFMPEG_URL: &str =
@@ -125,7 +125,7 @@ const DEFAULT_LINUX_FFMPEG_URL: &str =
 // The URL is a rolling one, so this needs a manual bump when upstream
 // publishes a new build (the current one is dated 2024-08-24). A stale pin
 // fails closed with a checksum error rather than silently accepting whatever
-// arrives; STEMDECK_FFMPEG_URL still overrides both, for anyone who needs it.
+// arrives; SELFSTEM_FFMPEG_URL still overrides both, for anyone who needs it.
 #[cfg(all(unix, not(target_os = "macos")))]
 const DEFAULT_LINUX_FFMPEG_SHA256: &str =
     "abda8d77ce8309141f83ab8edf0596834087c52467f6badf376a6a2a4c87cf67";
@@ -331,7 +331,7 @@ fn main() {
             let data_dir = match local_data_dir() {
                 Ok(d) => d,
                 Err(e) => {
-                    eprintln!("[stemdeck] could not resolve data_dir, skipping version check: {e}");
+                    eprintln!("[selfstem] could not resolve data_dir, skipping version check: {e}");
                     return Ok(());
                 }
             };
@@ -345,10 +345,10 @@ fn main() {
             // Runs on EVERY launch, not just a version change. apply_app_update
             // relaunches and then exits, so on the very first launch of the new
             // build the outgoing process is usually still alive and Windows
-            // still holds StemDeck.exe.old open -- the delete fails silently
+            // still holds SelfStem.exe.old open -- the delete fails silently
             // and, gated on a version change that has already happened, would
             // never be retried. Verified: after a real self-update both
-            // backend.old and StemDeck.exe.old were still on disk. Three path
+            // backend.old and SelfStem.exe.old were still on disk. Three path
             // checks per launch is nothing; leaking ~30 MB forever is not.
             sweep_update_leftovers();
 
@@ -390,7 +390,7 @@ fn main() {
                 let freed = prune_downloads(&data_dir, keep.as_deref());
                 if freed > 0 {
                     eprintln!(
-                        "[stemdeck] freed {} MB of stale downloads",
+                        "[selfstem] freed {} MB of stale downloads",
                         freed / 1_048_576
                     );
                 }
@@ -398,7 +398,7 @@ fn main() {
                 // cleanup — a missing version file would otherwise cause every launch
                 // to wipe WebKit data.
                 if let Err(e) = fs::write(&version_file, current) {
-                    eprintln!("[stemdeck] failed to write version file, skipping cleanup: {e}");
+                    eprintln!("[selfstem] failed to write version file, skipping cleanup: {e}");
                 }
             }
             let _ = app; // suppress unused warning
@@ -433,7 +433,7 @@ fn main() {
             mark_store_migration_done,
         ])
         .build(tauri::generate_context!())
-        .expect("failed to build StemDeck desktop app")
+        .expect("failed to build SelfStem desktop app")
         .run(|app_handle, event| {
             if let tauri::RunEvent::WindowEvent {
                 event: tauri::WindowEvent::CloseRequested { .. },
@@ -447,7 +447,7 @@ fn main() {
         });
 }
 
-/// Returns ~/Documents/StemDeck/ WITHOUT creating it. The Documents
+/// Returns ~/Documents/SelfStem/ WITHOUT creating it. The Documents
 /// *default* for the jobs folder (documents_dir_for_jobs below) and the
 /// source of a pre-#403 user-data.json for one-time migration
 /// (documents_store_path) -- chosen so the library is visible in
@@ -458,12 +458,12 @@ fn main() {
 /// compute the *default* jobs path, even when the user has relocated their
 /// library elsewhere via Settings and this default will never be used. Prior
 /// to the fix for #403 (part 2) this always recreated an empty
-/// ~/Documents/StemDeck/jobs, since the backend's own ensure_runtime_dirs
+/// ~/Documents/SelfStem/jobs, since the backend's own ensure_runtime_dirs
 /// (app/core/config.py) already mkdirs whichever JOBS_DIR actually wins that
 /// precedence -- this path only needs to exist when it is the one in use.
-fn documents_stemdeck_dir(app: &tauri::AppHandle) -> Result<PathBuf, String> {
+fn documents_selfstem_dir(app: &tauri::AppHandle) -> Result<PathBuf, String> {
     let documents = app.path().document_dir().map_err(|e| e.to_string())?;
-    Ok(documents.join("StemDeck"))
+    Ok(documents.join("SelfStem"))
 }
 
 /// The stems/jobs folder as it exists right now: the backend's own
@@ -496,7 +496,7 @@ fn current_jobs_dir(app: &tauri::AppHandle) -> PathBuf {
 /// (app/core/stems_location.py) already moves every entry it finds inside
 /// the jobs folder one by one, so a plain file sitting there (same as
 /// registry.json) needs no special-casing on that side. Before #403 this
-/// lived at the jobs folder's *parent* (~/Documents/StemDeck/user-data.json),
+/// lived at the jobs folder's *parent* (~/Documents/SelfStem/user-data.json),
 /// which relocation never touched -- a stems move would "forget" favorites,
 /// folder layout, and per-job mixer state even though the audio moved fine.
 ///
@@ -509,7 +509,7 @@ fn documents_store_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
         .map_err(|e| format!("failed to create {}: {e}", jobs_dir.display()))?;
     let new_path = jobs_dir.join("user-data.json");
     if !new_path.is_file() {
-        if let Ok(old_path) = documents_stemdeck_dir(app).map(|d| d.join("user-data.json")) {
+        if let Ok(old_path) = documents_selfstem_dir(app).map(|d| d.join("user-data.json")) {
             if old_path.is_file() && old_path != new_path {
                 let _ = fs::copy(&old_path, &new_path);
             }
@@ -526,10 +526,10 @@ fn directory_has_entries(path: &Path) -> bool {
         .unwrap_or(false)
 }
 
-/// The DEFAULT stems folder. Does NOT create it -- see documents_stemdeck_dir
+/// The DEFAULT stems folder. Does NOT create it -- see documents_selfstem_dir
 /// for why.
 ///
-/// Handed to the backend as STEMDECK_DEFAULT_JOBS_DIR, not STEMDECK_JOBS_DIR:
+/// Handed to the backend as SELFSTEM_DEFAULT_JOBS_DIR, not SELFSTEM_JOBS_DIR:
 /// the latter means "this deployment pins the location" and would override the
 /// folder the user picked in Settings (#354). The backend owns that choice; it
 /// is the one that has to move the library when it changes, including
@@ -537,7 +537,7 @@ fn directory_has_entries(path: &Path) -> bool {
 ///
 /// Two candidates, resolved in this order:
 ///
-/// 1. ~/Documents/StemDeck/jobs, if it already has anything in it. Every
+/// 1. ~/Documents/SelfStem/jobs, if it already has anything in it. Every
 ///    install before this default existed used this path, so an existing
 ///    user's real library lives there without any explicit `jobs_dir` in
 ///    settings.json to record it -- it was simply "the default." Checking
@@ -552,7 +552,7 @@ fn directory_has_entries(path: &Path) -> bool {
 ///    original Documents rationale (visible in Finder/Explorer, eligible for
 ///    OneDrive/iCloud backup, survives reinstalls) still applies to them.
 fn documents_dir_for_jobs(app: &tauri::AppHandle) -> PathBuf {
-    let legacy_default = match documents_stemdeck_dir(app) {
+    let legacy_default = match documents_selfstem_dir(app) {
         Ok(dir) => dir.join("jobs"),
         Err(_) => {
             return local_data_dir()
@@ -585,7 +585,7 @@ async fn pick_stems_folder(app: tauri::AppHandle) -> Result<Option<String>, Stri
     let (tx, rx) = std::sync::mpsc::channel();
     app.dialog()
         .file()
-        .set_title("Choose where StemDeck stores extracted stems")
+        .set_title("Choose where SelfStem stores extracted stems")
         .pick_folder(move |path| {
             let _ = tx.send(path);
         });
@@ -612,8 +612,8 @@ fn store_set(app: tauri::AppHandle, key: String, value: serde_json::Value) -> Re
 
 /// Clear the persistent user-data store entirely (Settings -> General ->
 /// "Reset app data"). Complements the backend's own job-data wipe (POST
-/// /api/reset) -- together they fully clear a user's local StemDeck state,
-/// including the per-job mixer-state keys (stemdeck:mix:<job_id>) that have
+/// /api/reset) -- together they fully clear a user's local SelfStem state,
+/// including the per-job mixer-state keys (selfstem:mix:<job_id>) that have
 /// no fixed enumeration to clear individually.
 #[tauri::command]
 fn reset_user_data(app: tauri::AppHandle) -> Result<(), String> {
@@ -631,10 +631,10 @@ fn mark_store_migration_done() {
     match local_data_dir() {
         Ok(d) => {
             if let Err(e) = fs::write(d.join("store_migration_done"), "") {
-                eprintln!("[stemdeck] failed to write migration flag: {e}");
+                eprintln!("[selfstem] failed to write migration flag: {e}");
             }
         }
-        Err(e) => eprintln!("[stemdeck] could not write migration flag: {e}"),
+        Err(e) => eprintln!("[selfstem] could not write migration flag: {e}"),
     }
 }
 
@@ -648,13 +648,13 @@ fn clear_webkit_data() {
         Err(_) => return,
     };
     let targets = [
-        format!("{home}/Library/WebKit/app.stemdeck.desktop"),
-        format!("{home}/Library/WebKit/stemdeck"),
+        format!("{home}/Library/WebKit/app.selfstem.desktop"),
+        format!("{home}/Library/WebKit/selfstem"),
     ];
     for path in &targets {
         if let Err(e) = fs::remove_dir_all(path) {
             if e.kind() != std::io::ErrorKind::NotFound {
-                eprintln!("[stemdeck] WebKit cleanup failed for {path}: {e}");
+                eprintln!("[selfstem] WebKit cleanup failed for {path}: {e}");
             }
         }
     }
@@ -913,7 +913,7 @@ async fn check_app_update(query: AppUpdateQuery) -> Result<AppUpdateAvailability
         };
 
         // A root-owned install (Linux `install.sh --global` puts it in
-        // /opt/stemdeck) cannot rewrite itself. Check before promising an
+        // /opt/selfstem) cannot rewrite itself. Check before promising an
         // update we would fail to apply.
         match app_root() {
             Ok(root) if !app_root_is_writable(&root) => {
@@ -1054,11 +1054,11 @@ fn verify_update_sha256(path: &Path, expected: &str, label: &str) -> Result<(), 
 }
 
 /// Unpack the downloaded app layer into `destination`, in whichever format
-/// this platform's packaging script produces. Both shapes put `StemDeck[.exe]`
+/// this platform's packaging script produces. Both shapes put `SelfStem[.exe]`
 /// and `backend/` at the archive root, so the caller sees the same layout.
 ///
 /// tar is used on Linux rather than zip specifically because it preserves the
-/// executable bit; a zip would land StemDeck without +x and the relaunch would
+/// executable bit; a zip would land SelfStem without +x and the relaunch would
 /// fail with a permission error.
 #[cfg(any(windows, target_os = "linux"))]
 fn extract_update_archive(archive: &Path, destination: &Path) -> Result<(), String> {
@@ -1081,7 +1081,7 @@ fn extract_update_archive(archive: &Path, destination: &Path) -> Result<(), Stri
 
 /// Whether this install can rewrite its own files.
 ///
-/// `packaging/linux/install.sh` offers a global install into `/opt/stemdeck`,
+/// `packaging/linux/install.sh` offers a global install into `/opt/selfstem`,
 /// which is root-owned while the app runs as the user. Renaming the binary
 /// there fails, so the updater has to decline up front and send the user to the
 /// normal download rather than discovering it half way through a swap. Windows
@@ -1089,7 +1089,7 @@ fn extract_update_archive(archive: &Path, destination: &Path) -> Result<(), Stri
 /// and honest on both.
 #[cfg(any(windows, target_os = "linux"))]
 fn app_root_is_writable(root: &Path) -> bool {
-    let probe = root.join(".stemdeck-update-probe");
+    let probe = root.join(".selfstem-update-probe");
     match fs::File::create(&probe) {
         Ok(_) => {
             let _ = fs::remove_file(&probe);
@@ -1290,8 +1290,8 @@ fn apply_app_update(
         //
         // Known residual gap: these two renames are back-to-back metadata
         // updates on one volume, but they are not a single atomic operation. A
-        // hard crash in that window would leave StemDeck.exe absent with
-        // StemDeck.exe.old holding the previous build, recoverable only by a
+        // hard crash in that window would leave SelfStem.exe absent with
+        // SelfStem.exe.old holding the previous build, recoverable only by a
         // manual rename -- unlike the swaps above there is no surviving
         // process to self-heal it on next launch. Closing it fully needs a
         // separate bootstrap launcher that is never itself replaced; flagging
@@ -1322,7 +1322,7 @@ fn apply_app_update(
 /// zip to a fresh folder therefore lost every setting the user had changed:
 /// stems location, port, compute device, quality, language. `ensure_workspace`
 /// already restores from here, but nothing wrote it after #399 moved the data
-/// directory — the backend mirrors to it now, via STEMDECK_SETTINGS_MIRROR.
+/// directory — the backend mirrors to it now, via SELFSTEM_SETTINGS_MIRROR.
 ///
 /// Deliberately the OS-standard data dir, i.e. exactly what `local_data_dir`
 /// returns for a NON-portable install, so the two layouts share one location
@@ -1332,7 +1332,7 @@ fn shared_settings_dir() -> Option<PathBuf> {
     {
         env::var("LOCALAPPDATA")
             .ok()
-            .map(|base| PathBuf::from(base).join("StemDeck"))
+            .map(|base| PathBuf::from(base).join("SelfStem"))
     }
     #[cfg(target_os = "macos")]
     {
@@ -1340,19 +1340,19 @@ fn shared_settings_dir() -> Option<PathBuf> {
             PathBuf::from(home)
                 .join("Library")
                 .join("Application Support")
-                .join("StemDeck")
+                .join("SelfStem")
         })
     }
     #[cfg(all(unix, not(target_os = "macos")))]
     {
         if let Ok(xdg) = env::var("XDG_DATA_HOME") {
-            return Some(PathBuf::from(xdg).join("stemdeck"));
+            return Some(PathBuf::from(xdg).join("selfstem"));
         }
         env::var("HOME").ok().map(|home| {
             PathBuf::from(home)
                 .join(".local")
                 .join("share")
-                .join("stemdeck")
+                .join("selfstem")
         })
     }
 }
@@ -1423,7 +1423,7 @@ struct ModelWarmupStatus {
     vocal_split_ready: bool,
 }
 
-/// Eagerly downloads/caches the ML models StemDeck uses (Demucs, beat-this,
+/// Eagerly downloads/caches the ML models SelfStem uses (Demucs, beat-this,
 /// automatic song sections, and the on-demand lead/backing vocal-split karaoke model, #275) via
 /// `app/pipeline/warmup.py`, so a user's first real job doesn't pay for any
 /// of them mid-pipeline. Best-effort per model: a single model failing to
@@ -1444,7 +1444,7 @@ fn warmup_models(state: tauri::State<BackendState>) -> Result<ModelWarmupStatus,
     command
         .args(["-m", "app.pipeline.warmup"])
         .current_dir(&backend_dir)
-        .env("STEMDECK_DATA_DIR", &data_dir)
+        .env("SELFSTEM_DATA_DIR", &data_dir)
         .env("PYTHONUNBUFFERED", "1")
         // Same cache locations start_backend uses, so a model downloaded here
         // is found (not re-downloaded) by the real backend later.
@@ -1508,7 +1508,7 @@ fn start_backend(
     state: tauri::State<BackendState>,
 ) -> Result<BackendStarted, String> {
     // Always bind all interfaces; whether other devices are actually served is
-    // controlled live by the backend's network gate (Settings → "Make StemDeck
+    // controlled live by the backend's network gate (Settings → "Make SelfStem
     // available on your network"), which defaults off and always allows
     // loopback. The WebView itself connects via 127.0.0.1 regardless.
     let bind_host = "0.0.0.0";
@@ -1530,7 +1530,7 @@ fn start_backend(
         let backend_dir = backend_dir(&root)?;
         let data_dir = local_data_dir()?;
         let python = python_path(&root).filter(|p| p.is_file()).ok_or_else(|| {
-            "Python runtime not found. Expected python/ or .venv/ under StemDeck.".to_string()
+            "Python runtime not found. Expected python/ or .venv/ under SelfStem.".to_string()
         })?;
         patch_pyvenv_cfg(&python);
         let (port, port_guard) = reserve_port(bind_host, configured_port())?;
@@ -1579,28 +1579,28 @@ fn start_backend(
             cmd.env("PYTHONHOME", pythonhome);
         }
 
-        // Jobs (stem audio files) live in ~/Documents/StemDeck/jobs/ so the user's
+        // Jobs (stem audio files) live in ~/Documents/SelfStem/jobs/ so the user's
         // library is visible in Finder, backed up by iCloud, and survives app reinstalls.
         let jobs_dir = documents_dir_for_jobs(&app_handle);
 
         cmd.current_dir(&backend_dir)
-            .env("STEMDECK_DATA_DIR", &data_dir)
-            .env("STEMDECK_DEFAULT_JOBS_DIR", &jobs_dir)
-            .env("STEMDECK_DESKTOP", "1")
+            .env("SELFSTEM_DATA_DIR", &data_dir)
+            .env("SELFSTEM_DEFAULT_JOBS_DIR", &jobs_dir)
+            .env("SELFSTEM_DESKTOP", "1")
             // Where the backend keeps the per-user copy of settings.json that
             // survives extracting a new package into a fresh folder. Computed
             // here so the write half and ensure_workspace's restore half can
             // never point at different places.
             .envs(
                 shared_settings_dir()
-                    .map(|dir| ("STEMDECK_SETTINGS_MIRROR", dir.join("settings.json"))),
+                    .map(|dir| ("SELFSTEM_SETTINGS_MIRROR", dir.join("settings.json"))),
             )
-            .env("STEMDECK_PARENT_PID", std::process::id().to_string())
+            .env("SELFSTEM_PARENT_PID", std::process::id().to_string())
             // How the backend proves it is ours when it answers /api/health.
             // The environment is the only channel that survives the Windows
             // venv launcher re-execing into python/base (#457), which is why
             // this exists rather than a PID comparison. See wait_for_health.
-            .env("STEMDECK_INSTANCE_TOKEN", &instance_token)
+            .env("SELFSTEM_INSTANCE_TOKEN", &instance_token)
             .env("PYTHONUNBUFFERED", "1")
             .env("XDG_CACHE_HOME", data_dir.join("cache"))
             .env("TORCH_HOME", data_dir.join("models").join("torch"))
@@ -1680,7 +1680,7 @@ fn build_target() -> BuildTarget {
 }
 
 /// Best-effort primary LAN IPv4, shown in Settings so the user knows the address
-/// to open StemDeck from another device. Uses the "connect a UDP socket" trick:
+/// to open SelfStem from another device. Uses the "connect a UDP socket" trick:
 /// no packets are sent — connect() just makes the OS pick the source IP for the
 /// default route. Returns None when offline / no route.
 #[tauri::command]
@@ -1814,7 +1814,7 @@ fn is_cpu_only_package(root: &Path) -> bool {
 }
 
 /// The `portable.txt` marker is trusted ONLY in the app root: it ships next to
-/// StemDeck.exe inside the Windows portable zip (scripts/windows/make-portable.ps1),
+/// SelfStem.exe inside the Windows portable zip (scripts/windows/make-portable.ps1),
 /// mirroring the `cpu-only` marker's root-only-trust pattern above. Shipped
 /// unconditionally in both the CPU and NVIDIA Windows builds, so a fresh
 /// extract is portable with zero user action. Never present on macOS/Linux.
@@ -2256,7 +2256,7 @@ fn classify_cuda_install_error(stderr: &str) -> String {
     }
     if lower.contains("access is denied") || lower.contains("permissionerror") {
         return "CUDA install failed: permission denied — antivirus software may be blocking \
-                the install. Try adding StemDeck to your AV exclusions and click Retry."
+                the install. Try adding SelfStem to your AV exclusions and click Retry."
             .to_string();
     }
     if lower.contains("could not connect") || lower.contains("connection timed out") {
@@ -2478,7 +2478,7 @@ fn verify_cuda_torch(python: &Path) -> bool {
                     {
                         let _ = writeln!(
                             f,
-                            "[stemdeck] CUDA verify failed. stderr:\n{}",
+                            "[selfstem] CUDA verify failed. stderr:\n{}",
                             stderr.trim()
                         );
                     }
@@ -2535,7 +2535,7 @@ const RELEASE_ASSET_HOSTS: [&str; 2] = ["github.com", "objects.githubusercontent
 /// checks against comes from the same place -- so the checksum proves the file
 /// arrived intact, not that it came from us. Without a host check, anything
 /// able to run script on that page can hand the shell an archive that
-/// `apply_app_update` then extracts over StemDeck's own executable and
+/// `apply_app_update` then extracts over SelfStem's own executable and
 /// backend/ (#510). The page is served over http by the Python backend, which
 /// Tauri treats as a remote origin, and these app-defined commands are not
 /// ACL-gated by the capability config.
@@ -2734,16 +2734,16 @@ fn stop_backend(state: &BackendState) {
     });
 }
 
-/// Returns the persistent user data directory for StemDeck.
-/// On Windows: %LocalAppData%\StemDeck
-/// On macOS: ~/Library/Application Support/StemDeck
-/// On Linux: $XDG_DATA_HOME/stemdeck  or  ~/.local/share/stemdeck
-/// Can be overridden by STEMDECK_DATA_DIR for development.
+/// Returns the persistent user data directory for SelfStem.
+/// On Windows: %LocalAppData%\SelfStem
+/// On macOS: ~/Library/Application Support/SelfStem
+/// On Linux: $XDG_DATA_HOME/selfstem  or  ~/.local/share/selfstem
+/// Can be overridden by SELFSTEM_DATA_DIR for development.
 fn local_data_dir() -> Result<PathBuf, String> {
-    if let Ok(path) = env::var("STEMDECK_DATA_DIR") {
+    if let Ok(path) = env::var("SELFSTEM_DATA_DIR") {
         return Ok(PathBuf::from(path));
     }
-    // Windows portable zip: redirect into data/ next to StemDeck.exe instead of
+    // Windows portable zip: redirect into data/ next to SelfStem.exe instead of
     // %LocalAppData% (#399). No-ops on macOS/Linux, where the marker never ships.
     if let Ok(root) = app_root() {
         if is_portable_package(&root) {
@@ -2754,7 +2754,7 @@ fn local_data_dir() -> Result<PathBuf, String> {
     {
         let base = env::var("LOCALAPPDATA")
             .map_err(|_| "LOCALAPPDATA environment variable not set".to_string())?;
-        Ok(PathBuf::from(base).join("StemDeck"))
+        Ok(PathBuf::from(base).join("SelfStem"))
     }
     #[cfg(target_os = "macos")]
     {
@@ -2762,18 +2762,18 @@ fn local_data_dir() -> Result<PathBuf, String> {
         Ok(PathBuf::from(home)
             .join("Library")
             .join("Application Support")
-            .join("StemDeck"))
+            .join("SelfStem"))
     }
     #[cfg(all(unix, not(target_os = "macos")))]
     {
         if let Ok(xdg) = env::var("XDG_DATA_HOME") {
-            return Ok(PathBuf::from(xdg).join("stemdeck"));
+            return Ok(PathBuf::from(xdg).join("selfstem"));
         }
         let home = env::var("HOME").map_err(|_| "HOME environment variable not set".to_string())?;
         Ok(PathBuf::from(home)
             .join(".local")
             .join("share")
-            .join("stemdeck"))
+            .join("selfstem"))
     }
 }
 
@@ -2794,7 +2794,7 @@ fn append_to_setup_log(data_dir: &Path, msg: &str) {
         .map(|d| d.as_secs())
         .unwrap_or(0);
     if let Ok(mut f) = fs::OpenOptions::new().create(true).append(true).open(&log) {
-        let _ = writeln!(f, "[{ts}] [stemdeck] {msg}");
+        let _ = writeln!(f, "[{ts}] [selfstem] {msg}");
     }
 }
 
@@ -2966,7 +2966,7 @@ fn prune_downloads(data_dir: &Path, keep: Option<&Path>) -> u64 {
         };
         match removed {
             Ok(()) => freed += size,
-            Err(e) => eprintln!("[stemdeck] could not remove {}: {e}", path.display()),
+            Err(e) => eprintln!("[selfstem] could not remove {}: {e}", path.display()),
         }
     }
     freed
@@ -3000,8 +3000,8 @@ fn prune_runtime_leftovers(data_dir: &Path) {
             continue;
         }
         match fs::remove_dir_all(&path) {
-            Ok(()) => eprintln!("[stemdeck] removed leftover {}", path.display()),
-            Err(e) => eprintln!("[stemdeck] could not remove {}: {e}", path.display()),
+            Ok(()) => eprintln!("[selfstem] removed leftover {}", path.display()),
+            Err(e) => eprintln!("[selfstem] could not remove {}: {e}", path.display()),
         }
     }
 }
@@ -3012,7 +3012,7 @@ fn runtime_archive_path(data_dir: &Path, manifest: &RuntimeManifest) -> PathBuf 
         .clone()
         .or_else(|| manifest.runtime_url.rsplit('/').next().map(str::to_string))
         .filter(|value| !value.trim().is_empty())
-        .unwrap_or_else(|| format!("StemDeck-runtime-macOS-{}.tar.zst", manifest.arch));
+        .unwrap_or_else(|| format!("SelfStem-runtime-macOS-{}.tar.zst", manifest.arch));
     data_dir.join("downloads").join(name)
 }
 
@@ -3337,7 +3337,7 @@ fn unix_timestamp() -> u64 {
 }
 
 fn app_root() -> Result<PathBuf, String> {
-    if let Ok(root) = env::var("STEMDECK_ROOT") {
+    if let Ok(root) = env::var("SELFSTEM_ROOT") {
         return Ok(PathBuf::from(root));
     }
     if let Ok(cwd) = env::current_dir() {
@@ -3407,7 +3407,7 @@ fn env_path_override(var: &str) -> Option<PathBuf> {
 
 fn python_path(root: &Path) -> Option<PathBuf> {
     #[cfg(debug_assertions)]
-    if let Some(p) = env_path_override("STEMDECK_PYTHON") {
+    if let Some(p) = env_path_override("SELFSTEM_PYTHON") {
         return Some(p);
     }
     if let Ok(data_dir) = local_data_dir() {
@@ -3435,7 +3435,7 @@ fn python_path(root: &Path) -> Option<PathBuf> {
 }
 
 fn ffmpeg_path(data_dir: &Path) -> Option<PathBuf> {
-    if let Some(p) = env_path_override("STEMDECK_FFMPEG") {
+    if let Some(p) = env_path_override("SELFSTEM_FFMPEG") {
         return Some(p);
     }
     let file = if cfg!(windows) {
@@ -3455,13 +3455,13 @@ fn ffprobe_path(data_dir: &Path) -> PathBuf {
     data_dir.join("ffmpeg").join(file)
 }
 
-// Locate an FFmpeg binary that already exists on disk. Honors the STEMDECK_FFMPEG
+// Locate an FFmpeg binary that already exists on disk. Honors the SELFSTEM_FFMPEG
 // override, then checks the canonical flat location, then the `bin/` subfolder so a
 // user who dropped an upstream FFmpeg build (which nests binaries under bin/) into
 // data/ffmpeg/ is detected instead of triggering a download (#248). ffprobe lives
 // alongside ffmpeg in every layout, so the returned parent dir suffices for PATH.
 fn resolve_existing_ffmpeg(data_dir: &Path) -> Option<PathBuf> {
-    if let Some(p) = env_path_override("STEMDECK_FFMPEG") {
+    if let Some(p) = env_path_override("SELFSTEM_FFMPEG") {
         return p.is_file().then_some(p);
     }
     let file = if cfg!(windows) {
@@ -3576,7 +3576,7 @@ fn reserve_port(host: &str, desired: u16) -> Result<(u16, Socket), String> {
 }
 
 /// A fresh identity for the backend this launch is about to spawn, handed to
-/// it as `STEMDECK_INSTANCE_TOKEN` and echoed back by `/api/health`.
+/// it as `SELFSTEM_INSTANCE_TOKEN` and echoed back by `/api/health`.
 ///
 /// It has to be unique per launch, not unguessable: it answers "is the process
 /// on this port the one I just started", and anything on the loopback
@@ -3608,7 +3608,7 @@ struct HealthIdentity {
 /// Wait until *our own* backend answers on `port`.
 ///
 /// Identity matters as much as liveness here. A 200 only proves something is
-/// listening; before #424 that was enough, so a second StemDeck launched while
+/// listening; before #424 that was enough, so a second SelfStem launched while
 /// one was already running would adopt the first instance's backend, and with
 /// it the first instance's data directory and library, with nothing on screen
 /// to suggest anything was wrong.
@@ -3621,7 +3621,7 @@ struct HealthIdentity {
 /// the real interpreter as a *child of its own*. The PID that binds the port is
 /// therefore a grandchild and can never equal `child.id()`. Every Windows
 /// portable user got the full ninety second timeout followed by "Another
-/// program is already using port 8000", naming StemDeck's own healthy backend
+/// program is already using port 8000", naming SelfStem's own healthy backend
 /// as the intruder.
 ///
 /// So identity travels in the environment instead, where it survives any number
@@ -3690,7 +3690,7 @@ fn port_conflict_hint(port: u16, foreign_pid: Option<u32>) -> String {
     match foreign_pid {
         Some(pid) => format!(
             "\n\nAnother program is already using port {port} (process {pid}). \
-             If that is a second copy of StemDeck, close it and try again, or \
+             If that is a second copy of SelfStem, close it and try again, or \
              change the port in Settings."
         ),
         None => String::new(),
@@ -3771,7 +3771,7 @@ fn parse_health_identity(response: &str) -> Option<HealthIdentity> {
 }
 
 fn ensure_ffmpeg(data_dir: &Path) -> Result<PathBuf, String> {
-    // Use an already-present binary (flat, bin/, or STEMDECK_FFMPEG override) before
+    // Use an already-present binary (flat, bin/, or SELFSTEM_FFMPEG override) before
     // downloading, so a manually-placed FFmpeg is honored (#248).
     if let Some(existing) = resolve_existing_ffmpeg(data_dir) {
         verify_ffmpeg(&existing)?;
@@ -3781,9 +3781,9 @@ fn ensure_ffmpeg(data_dir: &Path) -> Result<PathBuf, String> {
     // Prefer a system FFmpeg on PATH -- a Homebrew/apt/choco install, or a dev
     // machine that already has one -- over downloading our own, on every
     // platform. verify_ffmpeg() confirms it both runs on this OS *and* has
-    // every encoder StemDeck's export pipeline needs (see its doc comment),
+    // every encoder SelfStem's export pipeline needs (see its doc comment),
     // so this only short-circuits the download when the system build can
-    // actually fulfill StemDeck's requirements. This also protects macOS
+    // actually fulfill SelfStem's requirements. This also protects macOS
     // users on an older OS than our downloaded build assumes (#414): if they
     // already have a working system FFmpeg, we no longer force a potentially
     // incompatible download on top of it.
@@ -3824,7 +3824,7 @@ fn ensure_ffmpeg(data_dir: &Path) -> Result<PathBuf, String> {
 
 #[cfg(all(unix, not(target_os = "macos")))]
 fn download_linux_ffmpeg(data_dir: &Path) -> Result<(), String> {
-    let url = env_path_override("STEMDECK_FFMPEG_URL")
+    let url = env_path_override("SELFSTEM_FFMPEG_URL")
         .map(|p| p.display().to_string())
         .unwrap_or_else(|| DEFAULT_LINUX_FFMPEG_URL.to_string());
     let downloads = data_dir.join("downloads");
@@ -3834,7 +3834,7 @@ fn download_linux_ffmpeg(data_dir: &Path) -> Result<(), String> {
     download_file(&url, &archive, Duration::from_secs(30 * 60), "FFmpeg")?;
     // Only the pinned artifact is trusted. An override points somewhere we
     // cannot have a hash for, so it is the caller's business to vouch for it.
-    if env_path_override("STEMDECK_FFMPEG_URL").is_none() {
+    if env_path_override("SELFSTEM_FFMPEG_URL").is_none() {
         verify_pinned_sha256(&archive, Some(DEFAULT_LINUX_FFMPEG_SHA256), "FFmpeg")?;
     }
 
@@ -3932,7 +3932,7 @@ fn verify_pinned_sha256(path: &Path, expected: Option<&str>, label: &str) -> Res
 }
 
 /// evermeet.cx (zip-wrapped, universal binary) is used both for the fallback
-/// path and for a custom STEMDECK_FFMPEG_URL override -- that env var has
+/// path and for a custom SELFSTEM_FFMPEG_URL override -- that env var has
 /// always pointed at a zip in this shape, so overrides keep working exactly
 /// as before regardless of what the built-in primary source looks like.
 #[cfg(target_os = "macos")]
@@ -4015,13 +4015,13 @@ fn download_macos_ffmpeg(data_dir: &Path) -> Result<(), String> {
     // An explicit override always wins and skips the primary/fallback dance
     // entirely -- the user has already chosen a source. Goes through the
     // zip-wrapped path, the shape this override has always expected.
-    if let Some(ffmpeg_override) = env_path_override("STEMDECK_FFMPEG_URL") {
+    if let Some(ffmpeg_override) = env_path_override("SELFSTEM_FFMPEG_URL") {
         let ffmpeg_url = ffmpeg_override.display().to_string();
-        let ffprobe_url = env_path_override("STEMDECK_FFPROBE_URL")
+        let ffprobe_url = env_path_override("SELFSTEM_FFPROBE_URL")
             .map(|p| p.display().to_string())
             .unwrap_or_else(|| DEFAULT_MACOS_FFPROBE_URL.to_string());
-        let ffmpeg_expected = override_sha256("STEMDECK_FFMPEG_SHA256");
-        let ffprobe_expected = override_sha256("STEMDECK_FFPROBE_SHA256");
+        let ffmpeg_expected = override_sha256("SELFSTEM_FFMPEG_SHA256");
+        let ffprobe_expected = override_sha256("SELFSTEM_FFPROBE_SHA256");
         return download_macos_ffmpeg_zip_source(
             &ffmpeg_url,
             &ffprobe_url,
@@ -4038,7 +4038,7 @@ fn download_macos_ffmpeg(data_dir: &Path) -> Result<(), String> {
     // fallback: a single host with no CDN behind it, reported unreachable
     // from multiple regions (#388). A checksum match only proves the bytes are
     // what we expect, not that the binary actually launches on this machine's
-    // macOS version or has every encoder StemDeck needs -- verify both before
+    // macOS version or has every encoder SelfStem needs -- verify both before
     // accepting it over the fallback (#414).
     let primary_result = download_macos_ffmpeg_primary(&ffmpeg_dir)
         .and_then(|()| verify_ffmpeg(&ffmpeg_dir.join("ffmpeg")));
@@ -4135,7 +4135,7 @@ fn sha256_from_checksums(contents: &str, filename: &str) -> Option<String> {
 
 #[cfg(windows)]
 fn download_windows_ffmpeg(data_dir: &Path) -> Result<(), String> {
-    let url = env_path_override("STEMDECK_FFMPEG_URL")
+    let url = env_path_override("SELFSTEM_FFMPEG_URL")
         .map(|p| p.display().to_string())
         .unwrap_or_else(|| DEFAULT_WINDOWS_FFMPEG_URL.to_string());
     let is_default_url = url == DEFAULT_WINDOWS_FFMPEG_URL;
@@ -4285,7 +4285,7 @@ fn extract_ffmpeg_binaries(archive_path: &Path, data_dir: &Path) -> Result<(), S
     Ok(())
 }
 
-// Encoders StemDeck's export pipeline actually calls for by name: pcm_s16le
+// Encoders SelfStem's export pipeline actually calls for by name: pcm_s16le
 // (WAV stems), flac (FLAC stems), libmp3lame (MP3 stems/zips), libvorbis (OGG
 // stems), aac (the audio track on MP4 video exports) -- see app/api/stems.py's
 // per-format ffmpeg args. A minimal or distro-stripped FFmpeg build can pass a
@@ -4324,7 +4324,7 @@ fn verify_ffmpeg_encoders(path: &Path) -> Result<(), String> {
     }
 }
 
-// A binary is only "compatible with StemDeck's requirements" (#414) if it
+// A binary is only "compatible with SelfStem's requirements" (#414) if it
 // both runs on this machine and has every encoder the export pipeline needs
 // -- checking just one half would let either a broken-on-this-OS build or a
 // minimal/stripped one through.
@@ -4380,7 +4380,7 @@ fn write_setup_config(data_dir: &Path, ffmpeg: &Path) -> Result<(), String> {
             ),
             (
                 "ffmpegSource",
-                serde_json::json!(env::var("STEMDECK_FFMPEG_URL").unwrap_or_else(|_| {
+                serde_json::json!(env::var("SELFSTEM_FFMPEG_URL").unwrap_or_else(|_| {
                     if cfg!(windows) {
                         DEFAULT_WINDOWS_FFMPEG_URL.to_string()
                     } else if cfg!(target_os = "macos") {
@@ -4650,9 +4650,9 @@ mod tests {
         // download_app_update takes its URL from the WebView and checks it
         // against a SHA-256 from the same caller, so the checksum proves the
         // bytes arrived intact, not that they came from us. apply_app_update
-        // then extracts the result over StemDeck's own executable (#510).
+        // then extracts the result over SelfStem's own executable (#510).
         for ok in [
-            "https://github.com/stemdeckapp/stemdeck/releases/download/v0.16.1/x.zip",
+            "https://github.com/selfstemapp/selfstem/releases/download/v0.16.1/x.zip",
             "https://objects.githubusercontent.com/github-production-release-asset/1/2",
         ] {
             assert!(super::validate_release_url(ok).is_ok(), "should allow {ok}");
@@ -4665,7 +4665,7 @@ mod tests {
             "https://notgithub.com/x.zip",
             // Plain http would let a LAN attacker swap the bytes in flight,
             // which matters because the page itself is served over http.
-            "http://github.com/stemdeckapp/stemdeck/releases/download/v1/x.zip",
+            "http://github.com/selfstemapp/selfstem/releases/download/v1/x.zip",
             "file:///etc/passwd",
             "not a url",
         ] {
@@ -4721,10 +4721,10 @@ mod tests {
         // user state at all.
         let root = make_tmp();
         let destination_parent = make_tmp();
-        let destination = destination_parent.path().join("StemDeck");
+        let destination = destination_parent.path().join("SelfStem");
         fs::create_dir_all(&destination).unwrap();
         fs::create_dir_all(root.path().join("data")).unwrap();
-        let settings = br#"{"jobs_dir":"D:\\Audio\\StemDeck","separation_quality":"best"}"#;
+        let settings = br#"{"jobs_dir":"D:\\Audio\\SelfStem","separation_quality":"best"}"#;
         fs::write(root.path().join("data/settings.json"), settings).unwrap();
         fs::write(
             root.path().join("data/config.json"),
@@ -4754,7 +4754,7 @@ mod tests {
     fn legacy_migration_never_overwrites_newer_user_settings() {
         let root = make_tmp();
         let destination_parent = make_tmp();
-        let destination = destination_parent.path().join("StemDeck");
+        let destination = destination_parent.path().join("SelfStem");
         fs::create_dir_all(root.path().join("data")).unwrap();
         fs::create_dir_all(&destination).unwrap();
         fs::write(
@@ -4811,15 +4811,15 @@ mod tests {
         seed_downloads(
             dir.path(),
             &[
-                ("StemDeck-runtime-macOS-arm64-old.tar.zst", 2048),
+                ("SelfStem-runtime-macOS-arm64-old.tar.zst", 2048),
                 ("ffmpeg-macos.zip", 1024),
-                ("StemDeck-runtime-macOS-arm64.tar.zst", 512),
+                ("SelfStem-runtime-macOS-arm64.tar.zst", 512),
             ],
         );
         let keep = dir
             .path()
             .join("downloads")
-            .join("StemDeck-runtime-macOS-arm64.tar.zst");
+            .join("SelfStem-runtime-macOS-arm64.tar.zst");
 
         let freed = super::prune_downloads(dir.path(), Some(&keep));
 
@@ -4926,10 +4926,10 @@ mod tests {
         super::RuntimeManifest {
             version: version.to_string(),
             arch: "arm64".to_string(),
-            runtime_url: "https://example.invalid/StemDeck-runtime-macOS-arm64.tar.zst".to_string(),
+            runtime_url: "https://example.invalid/SelfStem-runtime-macOS-arm64.tar.zst".to_string(),
             runtime_sha256: "0".repeat(64),
             runtime_size: None,
-            archive_name: Some("StemDeck-runtime-macOS-arm64.tar.zst".to_string()),
+            archive_name: Some("SelfStem-runtime-macOS-arm64.tar.zst".to_string()),
         }
     }
 
@@ -5062,7 +5062,7 @@ mod tests {
         // We can't safely delete real WebKit dirs in a test, but we can verify
         // the function handles NotFound gracefully by checking the logic:
         let tmp = make_tmp();
-        let fake_webkit = tmp.path().join("WebKit").join("app.stemdeck.desktop");
+        let fake_webkit = tmp.path().join("WebKit").join("app.selfstem.desktop");
         // Never created → remove_dir_all should return NotFound, which we ignore.
         let result = fs::remove_dir_all(&fake_webkit);
         assert!(result.is_err());
@@ -5137,7 +5137,7 @@ mod tests {
     fn parses_the_checksum_file_make_portable_writes() {
         // "<sha256>  <filename>" -- Get-FileHash + Set-Content.
         let sha = "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824";
-        let written = format!("{}  StemDeck-Windows-x64-app.zip\n", sha.to_uppercase());
+        let written = format!("{}  SelfStem-Windows-x64-app.zip\n", sha.to_uppercase());
         assert_eq!(super::parse_sha256_line(&written).as_deref(), Some(sha));
     }
 
@@ -5203,7 +5203,7 @@ mod tests {
     #[cfg(target_os = "macos")]
     #[test]
     fn override_sha256_reads_a_set_env_var_and_skips_when_unset_or_blank() {
-        let key = "STEMDECK_FFMPEG_SHA256_TEST_UNSET_388";
+        let key = "SELFSTEM_FFMPEG_SHA256_TEST_UNSET_388";
         env::remove_var(key);
         assert!(super::override_sha256(key).is_none());
 
@@ -5271,7 +5271,7 @@ b6052160df96b31c9b1e33854a4dcda3d4b57641b880270f31736fb9f445d384  ffmpeg-n7.1-la
 
     #[test]
     fn missing_required_encoders_flags_only_the_absent_ones() {
-        // A full build listing every codec StemDeck needs -> nothing missing.
+        // A full build listing every codec SelfStem needs -> nothing missing.
         let full = "\
  A....D pcm_s16le            PCM signed 16-bit little-endian
  A....D flac                 FLAC (Free Lossless Audio Codec)
@@ -5539,7 +5539,7 @@ b6052160df96b31c9b1e33854a4dcda3d4b57641b880270f31736fb9f445d384  ffmpeg-n7.1-la
         assert!(super::validate_download_url("not a url").is_err());
     }
 
-    // #424: a second StemDeck adopted the first one's backend, and with it the
+    // #424: a second SelfStem adopted the first one's backend, and with it the
     // first one's library. Both halves of that are pinned below.
 
     #[test]
@@ -5607,7 +5607,7 @@ b6052160df96b31c9b1e33854a4dcda3d4b57641b880270f31736fb9f445d384  ffmpeg-n7.1-la
 
     #[test]
     fn a_held_reservation_keeps_everyone_else_out() {
-        // The reservation binds without listening, so that StemDeck.exe is not
+        // The reservation binds without listening, so that SelfStem.exe is not
         // a server in the firewall's eyes. That only works if bind alone still
         // holds the address against a real listener -- if it did not, the port
         // could be stolen between reserving it and the backend binding it.
@@ -5631,7 +5631,7 @@ b6052160df96b31c9b1e33854a4dcda3d4b57641b880270f31736fb9f445d384  ffmpeg-n7.1-la
     #[test]
     fn health_identity_comes_from_the_body_only() {
         let ok = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n\
-                  {\"name\":\"StemDeck\",\"status\":\"ok\",\"pid\":4242,\"instance\":\"abc\"}";
+                  {\"name\":\"SelfStem\",\"status\":\"ok\",\"pid\":4242,\"instance\":\"abc\"}";
         assert_eq!(
             super::parse_health_identity(ok),
             Some(super::HealthIdentity {
@@ -5687,7 +5687,7 @@ b6052160df96b31c9b1e33854a4dcda3d4b57641b880270f31736fb9f445d384  ffmpeg-n7.1-la
                 let mut buf = [0u8; 512];
                 let _ = stream.read(&mut buf);
                 let body = format!(
-                    "{{\"name\":\"StemDeck\",\"status\":\"ok\",\"pid\":{pid},\
+                    "{{\"name\":\"SelfStem\",\"status\":\"ok\",\"pid\":{pid},\
                      \"instance\":\"{instance}\"}}"
                 );
                 let _ = stream.write_all(

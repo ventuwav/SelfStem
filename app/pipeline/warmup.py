@@ -1,7 +1,7 @@
 """Eager model pre-download for the desktop first-boot setup wizard (#275).
 
 Run as `python -m app.pipeline.warmup`. Downloads/caches the four ML
-checkpoint families StemDeck uses: Demucs (htdemucs_6s), beat-this,
+checkpoint families SelfStem uses: Demucs (htdemucs_6s), beat-this,
 All-In-One song sections, and the on-demand lead/backing vocal-split karaoke
 model. This keeps a user's first real job from paying for them mid-pipeline. Invoked by the Tauri
 `warmup_models` command (desktop/src-tauri/src/main.rs) as one of the setup

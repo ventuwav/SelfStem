@@ -31,7 +31,7 @@ def test_an_unreadable_file_is_not_mistaken_for_a_first_run(tmp_path, monkeypatc
     mirror = tmp_path / "shared" / "settings.json"
     mirror.parent.mkdir(parents=True)
     mirror.write_text(json.dumps({"port": 8081, "allow_network": True}), encoding="utf-8")
-    monkeypatch.setenv("STEMDECK_SETTINGS_MIRROR", str(mirror))
+    monkeypatch.setenv("SELFSTEM_SETTINGS_MIRROR", str(mirror))
 
     _settings._SETTINGS_PATH.write_text('{"port": 80', encoding="utf-8")  # torn write
 
@@ -54,7 +54,7 @@ def test_recovered_settings_are_written_back_immediately(tmp_path, monkeypatch):
     mirror = tmp_path / "shared" / "settings.json"
     mirror.parent.mkdir(parents=True)
     mirror.write_text(json.dumps({"port": 8081}), encoding="utf-8")
-    monkeypatch.setenv("STEMDECK_SETTINGS_MIRROR", str(mirror))
+    monkeypatch.setenv("SELFSTEM_SETTINGS_MIRROR", str(mirror))
     _settings._SETTINGS_PATH.write_text("", encoding="utf-8")  # truncated to nothing
 
     _settings._load()
@@ -63,7 +63,7 @@ def test_recovered_settings_are_written_back_immediately(tmp_path, monkeypatch):
 
 
 def test_no_mirror_and_a_corrupt_file_falls_back_to_defaults(tmp_path, monkeypatch):
-    monkeypatch.delenv("STEMDECK_SETTINGS_MIRROR", raising=False)
+    monkeypatch.delenv("SELFSTEM_SETTINGS_MIRROR", raising=False)
     _settings._SETTINGS_PATH.write_text("not json at all", encoding="utf-8")
 
     assert _settings._load() == {}
@@ -71,7 +71,7 @@ def test_no_mirror_and_a_corrupt_file_falls_back_to_defaults(tmp_path, monkeypat
 
 def test_a_non_object_settings_file_is_treated_as_unusable(tmp_path, monkeypatch):
     # Valid JSON, wrong shape. Returning it would make every later .get() raise.
-    monkeypatch.delenv("STEMDECK_SETTINGS_MIRROR", raising=False)
+    monkeypatch.delenv("SELFSTEM_SETTINGS_MIRROR", raising=False)
     _settings._SETTINGS_PATH.write_text("[1, 2, 3]", encoding="utf-8")
 
     assert _settings._load() == {}

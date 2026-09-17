@@ -24,9 +24,9 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 
-const STORAGE_KEY = "stemdeck.folders";
+const STORAGE_KEY = "selfstem.folders";
 const STORAGE_VERSION = 2; // bump to wipe stale seeded data
-const DELETED_JOBS_KEY = "stemdeck.deleted_jobs";
+const DELETED_JOBS_KEY = "selfstem.deleted_jobs";
 
 // Curated "We Recommend" partners shown in the library's supporters dialog,
 // grouped into categories that render in this order. Add an entry to a group's
@@ -177,8 +177,8 @@ const UNSORTED_ID = "f-unsorted";
 const PROCESSING_STATUSES = new Set(["queued", "downloading", "analyzing", "separating", "processing"]);
 const FOLDER_COLORS = ["#d8a84a", "#e85f6f", "#64c86f", "#4f9de8", "#a985f4"];
 const DEFAULT_FOLDER_COLOR = FOLDER_COLORS[0];
-const TRACK_DRAG_TYPE = "application/x-stemdeck-track";
-const FOLDER_DRAG_TYPE = "application/x-stemdeck-folder";
+const TRACK_DRAG_TYPE = "application/x-selfstem-track";
+const FOLDER_DRAG_TYPE = "application/x-selfstem-folder";
 
 function getDeletedJobIds() {
   return _deletedJobIds;
@@ -2000,7 +2000,7 @@ export function setSidebarCollapsed(isCollapsed) {
     .getElementById("sidebarCollapseBtn")
     ?.setAttribute("aria-expanded", String(!isCollapsed));
   try {
-    localStorage.setItem("stemdeck.catalog.collapsed", isCollapsed ? "1" : "0");
+    localStorage.setItem("selfstem.catalog.collapsed", isCollapsed ? "1" : "0");
   } catch (e) {
     console.warn("[catalog] could not persist sidebar state:", e);
   }
@@ -2016,7 +2016,7 @@ function wireCatalogToggle() {
   const app = document.querySelector(".app");
   if (!app) return;
 
-  const collapsed = localStorage.getItem("stemdeck.catalog.collapsed") === "1";
+  const collapsed = localStorage.getItem("selfstem.catalog.collapsed") === "1";
   if (collapsed) {
     app.classList.add("cat-collapsed");
     collapseBtn?.setAttribute("aria-expanded", "false");
@@ -2160,7 +2160,7 @@ function wireWidgets() {
   for (const head of document.querySelectorAll(".widget-head")) {
     const widget = head.closest(".widget");
     if (!widget) continue;
-    const key = `stemdeck.widget.${widget.dataset.widget}`;
+    const key = `selfstem.widget.${widget.dataset.widget}`;
     if (localStorage.getItem(key) === "collapsed") {
       widget.classList.add("collapsed");
       head.setAttribute("aria-expanded", "false");
@@ -2180,17 +2180,17 @@ function wireWidgets() {
 
 const FALLBACK_VERSION = "0.1.0";
 let currentVersion = FALLBACK_VERSION;
-const REPO_URL = "https://github.com/stemdeckapp/stemdeck";
-const RELEASES_URL = "https://github.com/stemdeckapp/stemdeck/releases";
+const REPO_URL = "https://github.com/selfstemapp/selfstem";
+const RELEASES_URL = "https://github.com/selfstemapp/selfstem/releases";
 // The releases LIST, not /releases/latest. GitHub defines "latest" as the most
 // recent NON-PRERELEASE release, so the moment a version ships with the
 // pre-release box ticked it becomes invisible here and nobody is ever told an
-// update exists. StemDeck has historically published even its alphas as normal
+// update exists. SelfStem has historically published even its alphas as normal
 // releases, which is why that has not bitten yet -- this makes the check
 // correct either way rather than dependent on remembering not to tick a box.
 const RELEASES_API =
-  "https://api.github.com/repos/stemdeckapp/stemdeck/releases?per_page=10";
-const DISMISSED_UPDATE_KEY = "stemdeck.dismissed_update";
+  "https://api.github.com/repos/selfstemapp/selfstem/releases?per_page=10";
+const DISMISSED_UPDATE_KEY = "selfstem.dismissed_update";
 
 // The full GitHub release object from the last successful update check, used to
 // populate the release dialog (notes + per-arch download link) on card click.
@@ -2382,11 +2382,11 @@ export async function getBuildTarget() {
 // infix for the CUDA variant.
 function assetNameFor(target) {
   if (target.os === "macos") {
-    return `StemDeck-macOS-${target.arch === "arm64" ? "arm64" : "x64"}.dmg`;
+    return `SelfStem-macOS-${target.arch === "arm64" ? "arm64" : "x64"}.dmg`;
   }
   const variant = target.gpu === "nvidia" ? ".NVIDIA" : "";
-  if (target.os === "windows") return `StemDeck-Windows-x64${variant}.zip`;
-  return `StemDeck-Linux-x64${variant}.tar.gz`;
+  if (target.os === "windows") return `SelfStem-Windows-x64${variant}.zip`;
+  return `SelfStem-Linux-x64${variant}.tar.gz`;
 }
 
 function pickReleaseAsset(release, target) {
@@ -2422,10 +2422,10 @@ function findReleaseAsset(release, name) {
 // executable bit the relaunch depends on).
 function updaterAssetNames(target) {
   if (target.os === "windows") {
-    return { app: "StemDeck-Windows-x64-app.zip", runtimeId: "StemDeck-Windows-x64-runtime-version.json" };
+    return { app: "SelfStem-Windows-x64-app.zip", runtimeId: "SelfStem-Windows-x64-runtime-version.json" };
   }
   if (target.os === "linux") {
-    return { app: "StemDeck-Linux-x64-app.tar.gz", runtimeId: "StemDeck-Linux-x64-runtime-version.json" };
+    return { app: "SelfStem-Linux-x64-app.tar.gz", runtimeId: "SelfStem-Linux-x64-runtime-version.json" };
   }
   return null;
 }
@@ -2565,7 +2565,7 @@ async function openReleaseDialog() {
   const serverMode = !window.__TAURI__?.core?.invoke;
   if (serverMode) {
     const tag = normalizeVersion(latestRelease.tag_name);
-    if (dockerCmd) dockerCmd.textContent = `docker pull ghcr.io/stemdeckapp/stemdeck:${tag}`;
+    if (dockerCmd) dockerCmd.textContent = `docker pull ghcr.io/selfstemapp/selfstem:${tag}`;
     docker?.classList.remove("hidden");
     download?.classList.add("hidden");
   } else if (download) {
@@ -2682,7 +2682,7 @@ async function checkForUpdate() {
   } catch (e) {
     console.warn("[catalog] update check failed:", e);
     // Only report a genuine failure, not "we are offline": an update check that
-    // cannot reach GitHub is not a StemDeck bug and must not file one.
+    // cannot reach GitHub is not a SelfStem bug and must not file one.
     if (!(e instanceof TypeError)) {
       notifyFailure({
         kind: "update",
@@ -2984,7 +2984,7 @@ function renderLibraryRows(tbody) {
   }
 }
 
-// "Make StemDeck available on your network" toggle. The backend always binds
+// "Make SelfStem available on your network" toggle. The backend always binds
 // all interfaces and gates LAN access on a runtime flag (GET/POST /api/settings)
 // — so this works live, no restart, identically in the desktop app and the
 // self-hosted server. Loopback is always allowed, so the owner can't lock
@@ -2994,9 +2994,9 @@ function networkSettingsHtml() {
     <div class="settings-section">
       <div class="settings-row">
         <div class="settings-row-text">
-          <div class="settings-row-title" data-i18n="settings.network.allowTitle">Make StemDeck available on your network</div>
-          <div class="settings-row-desc" data-i18n="settings.network.allowDesc">Let other devices (like your phone) open StemDeck at the address below.</div>
-          <div class="settings-row-desc settings-lock-note" data-i18n="settings.network.lockNote">Read-only when StemDeck is started in server mode — network access is then set by your server configuration.</div>
+          <div class="settings-row-title" data-i18n="settings.network.allowTitle">Make SelfStem available on your network</div>
+          <div class="settings-row-desc" data-i18n="settings.network.allowDesc">Let other devices (like your phone) open SelfStem at the address below.</div>
+          <div class="settings-row-desc settings-lock-note" data-i18n="settings.network.lockNote">Read-only when SelfStem is started in server mode — network access is then set by your server configuration.</div>
         </div>
         <label class="settings-switch">
           <input type="checkbox" class="net-access-input" />
@@ -3148,7 +3148,7 @@ async function wireStemsLocation(overlay) {
 
 // Language picker: purely a client-side/cosmetic preference (no server
 // behavior depends on it), so it's read/written via setLanguage() (i18n.js,
-// storeGet/storeSet under "stemdeck.language") rather than the /api/settings
+// storeGet/storeSet under "selfstem.language") rather than the /api/settings
 // round trip the rest of this modal uses -- see i18n.js's module comment for
 // why that split matches the app's existing convention.
 function wireLanguageSetting(overlay) {
@@ -3408,7 +3408,7 @@ async function wireNetworkSetting(overlay) {
   if (serverMode) enabled = true;
 
   // QR codes: one per LAN address, each encodes the /mobile/ URL so the
-  // phone camera opens StemDeck directly. Cards start blurred so an open
+  // phone camera opens SelfStem directly. Cards start blurred so an open
   // camera app on a nearby device doesn't scan them before you're ready.
   if (qrWrap) {
     qrWrap.textContent = "";
@@ -3565,7 +3565,7 @@ async function exportLogs(btn) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `stemdeck-logs-${stamp}.zip`;
+    a.download = `selfstem-logs-${stamp}.zip`;
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -3715,7 +3715,7 @@ function openLibraryEditor() {
           <div class="settings-row settings-row-stack">
             <div class="settings-row-text">
               <div class="settings-row-title" data-i18n="settings.cookies.title">YouTube cookies</div>
-              <div class="settings-row-desc" data-i18n="settings.cookies.desc">Optional. Path to a cookies.txt file, used only when YouTube asks StemDeck to confirm it is not a bot. Leave this empty unless imports are failing.</div>
+              <div class="settings-row-desc" data-i18n="settings.cookies.desc">Optional. Path to a cookies.txt file, used only when YouTube asks SelfStem to confirm it is not a bot. Leave this empty unless imports are failing.</div>
             </div>
             <input type="text" class="settings-text-input set-cookies-file" spellcheck="false" autocomplete="off" placeholder="Path to cookies.txt" data-i18n-placeholder="settings.cookies.placeholder" aria-label="YouTube cookies" data-i18n-aria-label="settings.cookies.title" />
             <div class="cookies-file-msg" role="status" aria-live="polite"></div>
@@ -3812,7 +3812,7 @@ function openLibraryEditor() {
           <div class="settings-row">
             <div class="settings-row-text">
               <div class="settings-row-title" data-i18n="settings.network.port.title">Port</div>
-              <div class="settings-row-desc" data-i18n="settings.network.port.desc">Port StemDeck runs on. Restart to apply.</div>
+              <div class="settings-row-desc" data-i18n="settings.network.port.desc">Port SelfStem runs on. Restart to apply.</div>
             </div>
             <input type="text" class="settings-num-input set-port" inputmode="numeric" maxlength="5" aria-label="Port" data-i18n-aria-label="settings.network.port.title" />
           </div>
@@ -3859,7 +3859,7 @@ function openLibraryEditor() {
           <div class="settings-row">
             <div class="settings-row-text">
               <div class="settings-row-title" data-i18n="settings.logs.location.title">Log location</div>
-              <div class="settings-row-desc" data-i18n="settings.logs.location.desc">Where StemDeck writes its logs on this machine. Read-only — open them in a file manager or use Export logs.</div>
+              <div class="settings-row-desc" data-i18n="settings.logs.location.desc">Where SelfStem writes its logs on this machine. Read-only — open them in a file manager or use Export logs.</div>
             </div>
             <button class="settings-registry-refresh settings-logs-refresh" type="button" data-i18n="settings.logs.refresh">Refresh</button>
           </div>
@@ -3870,7 +3870,7 @@ function openLibraryEditor() {
           <div class="settings-row">
             <div class="settings-row-text">
               <div class="settings-row-title" data-i18n="settings.logs.application.title">Application log</div>
-              <div class="settings-row-desc" data-i18n="settings.logs.application.desc">The last hour from <code>stemdeck.log</code> — pipeline, API and job activity. Read-only.</div>
+              <div class="settings-row-desc" data-i18n="settings.logs.application.desc">The last hour from <code>selfstem.log</code> — pipeline, API and job activity. Read-only.</div>
             </div>
             <button class="settings-registry-refresh settings-logtail-refresh" type="button" data-view="application" data-i18n="settings.logs.refresh">Refresh</button>
           </div>
@@ -3969,7 +3969,7 @@ function openLibraryEditor() {
   }
   // Reset app data (#312): originally a "session keeps coming back across
   // desktop reinstalls" fix (the real persisted state lives in
-  // ~/Documents/StemDeck, not the extracted package's own bundled data/
+  // ~/Documents/SelfStem, not the extracted package's own bundled data/
   // folder), available in server mode too -- same network_gate trust
   // boundary as every other settings-mutating endpoint, enforced
   // server-side (not just hidden here). On a shared server this deletes

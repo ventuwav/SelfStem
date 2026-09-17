@@ -84,7 +84,7 @@ def test_rejects_a_folder_full_of_the_users_own_files(tmp_path):
         validate_target(target, current)
 
 
-def test_accepts_a_folder_stemdeck_already_uses(tmp_path):
+def test_accepts_a_folder_selfstem_already_uses(tmp_path):
     """Retrying an interrupted move must not be blocked by its own progress."""
     current = tmp_path / "old"
     current.mkdir()
@@ -199,7 +199,7 @@ def test_directory_size_adds_up(tmp_path):
 
 @pytest.fixture
 def client(tmp_path, monkeypatch):
-    monkeypatch.setenv("STEMDECK_DESKTOP", "1")
+    monkeypatch.setenv("SELFSTEM_DESKTOP", "1")
     jobs = tmp_path / "current"
     jobs.mkdir()
     import app.core.settings as settings_mod
@@ -317,7 +317,7 @@ def test_missing_path_is_a_422(client):
 def server_client(tmp_path, monkeypatch):
     """The same app without the desktop shell: a self-hosted server, Docker or
     Unraid deployment."""
-    monkeypatch.delenv("STEMDECK_DESKTOP", raising=False)
+    monkeypatch.delenv("SELFSTEM_DESKTOP", raising=False)
     jobs = tmp_path / "current"
     jobs.mkdir()
     import app.main as main_mod
@@ -367,9 +367,9 @@ def _resolve_jobs_dir(tmp_path: Path, env_extra: dict, settings: dict | None) ->
     else:
         settings_file.write_text(json.dumps(settings), encoding="utf-8")
 
-    env = {**os.environ, "STEMDECK_DATA_DIR": str(data)}
-    env.pop("STEMDECK_JOBS_DIR", None)
-    env.pop("STEMDECK_DEFAULT_JOBS_DIR", None)
+    env = {**os.environ, "SELFSTEM_DATA_DIR": str(data)}
+    env.pop("SELFSTEM_JOBS_DIR", None)
+    env.pop("SELFSTEM_DEFAULT_JOBS_DIR", None)
     env.update(env_extra)
     out = subprocess.run(
         [sys.executable, "-c", "from app.core.config import JOBS_DIR; print(JOBS_DIR)"],
@@ -386,7 +386,7 @@ def test_the_desktop_default_is_used_until_the_user_chooses(tmp_path):
     """The upgrade path. The launcher passes its Documents folder as a DEFAULT,
     and with no stored choice that is exactly where the library must stay."""
     default = tmp_path / "documents-jobs"
-    got = _resolve_jobs_dir(tmp_path, {"STEMDECK_DEFAULT_JOBS_DIR": str(default)}, None)
+    got = _resolve_jobs_dir(tmp_path, {"SELFSTEM_DEFAULT_JOBS_DIR": str(default)}, None)
     assert got == str(default)
 
 
@@ -395,7 +395,7 @@ def test_a_stored_choice_beats_the_desktop_default(tmp_path):
     chosen.mkdir()  # it exists in reality: the move creates it before the setting is written
     got = _resolve_jobs_dir(
         tmp_path,
-        {"STEMDECK_DEFAULT_JOBS_DIR": str(tmp_path / "documents-jobs")},
+        {"SELFSTEM_DEFAULT_JOBS_DIR": str(tmp_path / "documents-jobs")},
         {"jobs_dir": str(chosen)},
     )
     assert got == str(chosen)
@@ -408,8 +408,8 @@ def test_an_explicit_pin_beats_everything(tmp_path):
     got = _resolve_jobs_dir(
         tmp_path,
         {
-            "STEMDECK_JOBS_DIR": str(mount),
-            "STEMDECK_DEFAULT_JOBS_DIR": str(tmp_path / "documents-jobs"),
+            "SELFSTEM_JOBS_DIR": str(mount),
+            "SELFSTEM_DEFAULT_JOBS_DIR": str(tmp_path / "documents-jobs"),
         },
         {"jobs_dir": str(tmp_path / "chosen")},
     )
@@ -427,9 +427,9 @@ def test_a_corrupt_setting_falls_back_rather_than_moving_the_library(tmp_path):
     import subprocess
     import sys
 
-    env = {**os.environ, "STEMDECK_DATA_DIR": str(tmp_path / "data")}
-    env.pop("STEMDECK_JOBS_DIR", None)
-    env["STEMDECK_DEFAULT_JOBS_DIR"] = str(default)
+    env = {**os.environ, "SELFSTEM_DATA_DIR": str(tmp_path / "data")}
+    env.pop("SELFSTEM_JOBS_DIR", None)
+    env["SELFSTEM_DEFAULT_JOBS_DIR"] = str(default)
     out = subprocess.run(
         [sys.executable, "-c", "from app.core.config import JOBS_DIR; print(JOBS_DIR)"],
         env=env,
@@ -448,8 +448,8 @@ def test_a_configured_folder_that_is_gone_falls_back(tmp_path):
     default = tmp_path / "documents-jobs"
     got = _resolve_jobs_dir(
         tmp_path,
-        {"STEMDECK_DEFAULT_JOBS_DIR": str(default)},
-        {"jobs_dir": str(tmp_path / "unplugged-drive" / "StemDeck")},
+        {"SELFSTEM_DEFAULT_JOBS_DIR": str(default)},
+        {"jobs_dir": str(tmp_path / "unplugged-drive" / "SelfStem")},
     )
     assert got == str(default)
     assert not (tmp_path / "unplugged-drive").exists(), "must not create the missing path"

@@ -18,7 +18,7 @@ _HEARTBEAT_SECONDS = 10
 # Hugging Face populates its cache with symlinks. Creating one on Windows needs
 # either elevation or Developer Mode, and the resulting WinError 1314 is an
 # OSError rather than the PermissionError the hub falls back on, so the
-# download crashes instead of copying. StemDeck runs unelevated by design, so
+# download crashes instead of copying. SelfStem runs unelevated by design, so
 # the checkpoints are copied unconditionally: they total about 10 MB, and a
 # deterministic cache is worth more than the saved space.
 os.environ.setdefault("HF_HUB_DISABLE_SYMLINKS", "1")

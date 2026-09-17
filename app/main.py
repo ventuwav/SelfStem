@@ -83,13 +83,13 @@ from app.core.stems_location import (
 from app.pipeline.collect import sweep_failed_jobs, sweep_old_jobs
 from app.pipeline.sections import sweep_orphaned_workspaces as sweep_orphaned_section_workspaces
 
-# Set the stemdeck logger level (Python's default root level of WARNING would
+# Set the selfstem logger level (Python's default root level of WARNING would
 # silently drop every logger.info(...) call) and attach the rotating file log
-# at LOGS_DIR/stemdeck.log. The analyze diagnostics ("chroma:", "key
-# candidates:") are DEBUG-level -- set STEMDECK_DEBUG=1 (or
-# STEMDECK_LOG_LEVEL=DEBUG) to see them.
+# at LOGS_DIR/selfstem.log. The analyze diagnostics ("chroma:", "key
+# candidates:") are DEBUG-level -- set SELFSTEM_DEBUG=1 (or
+# SELFSTEM_LOG_LEVEL=DEBUG) to see them.
 configure_logging()
-logging.getLogger("stemdeck").info(
+logging.getLogger("selfstem").info(
     "demucs config: model=%s device=%s", DEMUCS_MODEL, get_demucs_device()
 )
 
@@ -104,7 +104,7 @@ try:
 except ImportError:
     pass
 
-_log = logging.getLogger("stemdeck")
+_log = logging.getLogger("selfstem")
 
 
 def app_version() -> str:
@@ -135,7 +135,7 @@ def app_version() -> str:
     # Installed package metadata (set at install/build from the tag); then the
     # generated app/_version.py for non-installed runs, then a dev placeholder.
     try:
-        return package_version("stemdeck")
+        return package_version("selfstem")
     except PackageNotFoundError:
         pass
     try:
@@ -196,7 +196,7 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     #
     # Deliberately paused: opening the app must not start separating on its own.
     # A restored queue can be dozens of tracks and hours of GPU, and the user
-    # may well have opened StemDeck to do something else entirely. They press
+    # may well have opened SelfStem to do something else entirely. They press
     # Start (or simply import something new, which lifts the pause).
     # Nothing is analyzing yet, so any section workspace still on disk belongs
     # to a process that died mid-stage and is safe to remove (#483).
@@ -214,13 +214,13 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
             "restored %d interrupted job(s) from the previous session; queue is paused",
             len(resumed),
         )
-    if os.environ.get("STEMDECK_DESKTOP") == "1":
-        parent_pid = os.environ.get("STEMDECK_PARENT_PID")
+    if os.environ.get("SELFSTEM_DESKTOP") == "1":
+        parent_pid = os.environ.get("SELFSTEM_PARENT_PID")
         if parent_pid:
             try:
                 parent_pid_int = int(parent_pid)
             except ValueError:
-                _log.warning("invalid STEMDECK_PARENT_PID=%r", parent_pid)
+                _log.warning("invalid SELFSTEM_PARENT_PID=%r", parent_pid)
             else:
                 if parent_pid_int > 0 and parent_pid_int != os.getpid():
                     wt = asyncio.create_task(_desktop_parent_watchdog(parent_pid_int))
@@ -255,7 +255,7 @@ def _is_mobile_ua(user_agent: str) -> bool:
 
 
 app = FastAPI(
-    title="StemDeck",
+    title="SelfStem",
     description="Paste a YouTube URL or upload an audio file, get audio stems split into a DAW-style player.",
     version=app_version(),
     lifespan=lifespan,
@@ -287,7 +287,7 @@ def health_root() -> dict[str, object]:
 @app.get("/api/health", tags=["health"])
 def health() -> dict[str, object]:
     return {
-        "name": "StemDeck",
+        "name": "SelfStem",
         "status": "ok",
         "version": app_version(),
         "ffmpeg_configured": FFMPEG_BIN.is_file(),
@@ -296,7 +296,7 @@ def health() -> dict[str, object]:
         # Who is answering. The desktop shell spawns this backend and then polls
         # this endpoint to know it came up -- but a 200 alone only proves
         # *something* is listening on that port, not that it is the backend the
-        # shell just started. When a second StemDeck was launched, the new
+        # shell just started. When a second SelfStem was launched, the new
         # window adopted the already-running instance's backend, and with it
         # that instance's data directory and library (#424).
         #
@@ -310,7 +310,7 @@ def health() -> dict[str, object]:
         # portable launch timed out (#457). The environment survives any number
         # of re-execs, so identity travels there instead.
         "pid": os.getpid(),
-        "instance": os.environ.get("STEMDECK_INSTANCE_TOKEN", ""),
+        "instance": os.environ.get("SELFSTEM_INSTANCE_TOKEN", ""),
     }
 
 
@@ -438,12 +438,12 @@ def _stems_location_editable() -> bool:
     """Relocating the stem library is a desktop-app feature only (#354).
 
     A server, Docker or Unraid deployment gets its storage from a mounted volume
-    or an explicit STEMDECK_JOBS_DIR, decided by whoever runs it. Moving files
+    or an explicit SELFSTEM_JOBS_DIR, decided by whoever runs it. Moving files
     from inside the app there would fight the deployment: the mount would still
     be the mount on the next start, and the library would be somewhere the
     container no longer looks.
     """
-    return os.environ.get("STEMDECK_DESKTOP") == "1"
+    return os.environ.get("SELFSTEM_DESKTOP") == "1"
 
 
 def _require_desktop_shell() -> None:
@@ -452,7 +452,7 @@ def _require_desktop_shell() -> None:
             status_code=403,
             detail=(
                 "The stems folder is set by this deployment. "
-                "Change the mounted volume or STEMDECK_JOBS_DIR instead."
+                "Change the mounted volume or SELFSTEM_JOBS_DIR instead."
             ),
         )
 
@@ -569,7 +569,7 @@ def reset_app_data() -> dict[str, object]:
     """Factory reset (Settings -> General -> "Reset app data"): delete every
     job directory and the registry, so no old work session can resurface
     across package reinstalls -- on desktop, the runtime state that actually
-    persists (~/Documents/StemDeck, not the extracted package's own bundled
+    persists (~/Documents/SelfStem, not the extracted package's own bundled
     data/ folder) survives a fresh install otherwise. The browser-side
     library index is a separate store the frontend clears itself (the Tauri
     reset_user_data command on desktop, localStorage directly in server/
@@ -618,12 +618,12 @@ def get_registry_raw() -> PlainTextResponse:
 # rather than promising files that will never appear.
 _LOG_FILES: tuple[tuple[str, str], ...] = (
     (
-        "stemdeck.log",
+        "selfstem.log",
         "Application log: the pipeline, API and job activity. Rotates at 5 MB, 3 kept.",
     ),
-    ("stemdeck.log.1", "Older application log."),
-    ("stemdeck.log.2", "Older application log."),
-    ("stemdeck.log.3", "Oldest kept application log."),
+    ("selfstem.log.1", "Older application log."),
+    ("selfstem.log.2", "Older application log."),
+    ("selfstem.log.3", "Oldest kept application log."),
     ("backend.log", "Desktop only: raw output of the bundled Python backend process."),
     ("backend.log.1", "Desktop only: older backend output."),
     ("backend.log.2", "Desktop only: oldest kept backend output."),
@@ -669,11 +669,11 @@ def get_logs_info() -> dict[str, object]:
 # the backup immediately before it -- a rotation inside the window would
 # otherwise make a busy log look empty.
 _LOG_VIEWS: dict[str, tuple[str, ...]] = {
-    "application": ("stemdeck.log", "stemdeck.log.1"),
+    "application": ("selfstem.log", "selfstem.log.1"),
     # The backend's raw stdout/stderr. Worth a view of its own because it holds
     # what the application log cannot: anything the process printed before
     # logging was configured, and anything that killed it before a handler ran.
-    # A backend that dies at startup leaves stemdeck.log empty and the answer
+    # A backend that dies at startup leaves selfstem.log empty and the answer
     # here.
     "backend": ("backend.log", "backend.log.1", "backend.log.2"),
     "setup": ("setup.log",),
@@ -683,9 +683,9 @@ _LOG_VIEWS: dict[str, tuple[str, ...]] = {
 _LOG_TAIL_BYTES = 1_500_000
 _LOG_TAIL_LINES = 4000
 
-# "2026-07-18 12:43:42 I stemdeck ..." -- the file handler's datefmt.
+# "2026-07-18 12:43:42 I selfstem ..." -- the file handler's datefmt.
 _PY_LOG_TS = re.compile(r"^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) ")
-# "[1786205373] [stemdeck] ..." -- setup.log, epoch seconds (see the Rust
+# "[1786205373] [selfstem] ..." -- setup.log, epoch seconds (see the Rust
 # writer; the crate has no date library).
 _SETUP_LOG_TS = re.compile(r"^\[(\d{9,})\] ")
 
@@ -812,7 +812,7 @@ def download_logs_zip() -> StreamingResponse:
     return StreamingResponse(
         buf,
         media_type="application/zip",
-        headers={"Content-Disposition": f'attachment; filename="stemdeck-logs-{stamp}.zip"'},
+        headers={"Content-Disposition": f'attachment; filename="selfstem-logs-{stamp}.zip"'},
     )
 
 
@@ -942,7 +942,7 @@ def _local_ips() -> frozenset[str]:
 
 
 def _is_host_request(host: str | None) -> bool:
-    """True when the request originates from the machine StemDeck runs on —
+    """True when the request originates from the machine SelfStem runs on —
     whether via loopback or one of its own interface addresses."""
     if _is_loopback(host):
         return True
@@ -952,7 +952,7 @@ def _is_host_request(host: str | None) -> bool:
     return h in _local_ips()
 
 
-# Network availability gate (Settings → "Make StemDeck available on your
+# Network availability gate (Settings → "Make SelfStem available on your
 # network"). Added after the headers middleware so it is the OUTERMOST layer and
 # short-circuits before anything else. It NEVER stops the server — it only
 # refuses requests from OTHER devices when availability is off. The host machine
@@ -964,7 +964,7 @@ async def network_gate(request: Request, call_next):
         client_host = request.client.host if request.client else None
         if not _is_host_request(client_host):
             return PlainTextResponse(
-                "StemDeck is not available on the network. Enable it in Settings on the host machine.",
+                "SelfStem is not available on the network. Enable it in Settings on the host machine.",
                 status_code=403,
             )
     return await call_next(request)

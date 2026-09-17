@@ -70,7 +70,7 @@ function wireVocalModeToggle() {
 // ─── Experimental song-structure extraction ───
 //
 // The server owns this flag, not the browser: the pipeline reads it per job,
-// so a phone and a laptop pointed at the same StemDeck must not disagree about
+// so a phone and a laptop pointed at the same SelfStem must not disagree about
 // whether the next import pays for an inference pass. The button therefore
 // reflects the server's answer and writes back, rather than keeping its own
 // local state.

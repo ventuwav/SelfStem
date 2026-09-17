@@ -1008,7 +1008,7 @@ function wireSpeedControl() {
 
 // ─── Click track ────────────────────────────────────────────
 
-const _METRO_PREFS_KEY = "stemdeck:metronome";
+const _METRO_PREFS_KEY = "selfstem:metronome";
 
 function _saveMetroPrefs() {
   storeSet(_METRO_PREFS_KEY, {

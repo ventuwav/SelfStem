@@ -32,7 +32,7 @@ from app.core.settings import get_export_sample_rate
 from app.pipeline.click_render import cache_key as click_cache_key
 from app.pipeline.click_render import count_in_beats, render_click_wav, render_count_in_wav
 
-logger = logging.getLogger("stemdeck.api")
+logger = logging.getLogger("selfstem.api")
 
 router = APIRouter(tags=["stems"])
 
@@ -156,7 +156,7 @@ def _prune_mixdown_cache(cache_dir: Path, keep: Path | None = None) -> None:
     budget put the directory over on its own, so the loop deleted it, newest
     and only entry though it was, and the caller handed a path that no longer
     existed to FileResponse. A 60-minute WAV crosses the 500 MB budget at about
-    49.5 minutes, well inside the 60 StemDeck accepts (#482).
+    49.5 minutes, well inside the 60 SelfStem accepts (#482).
 
     Its size still counts toward the total, so an oversized entry evicts
     everything else and then stops, leaving the cache one file over budget
@@ -1136,7 +1136,7 @@ async def get_all_stems_zip(
     if not sources:
         raise HTTPException(status_code=404, detail="no stems found")
 
-    fd, tmp = tempfile.mkstemp(prefix="stemdeck_zip_", suffix=".zip")
+    fd, tmp = tempfile.mkstemp(prefix="selfstem_zip_", suffix=".zip")
     os.close(fd)
     tmp_path = Path(tmp)
     try:

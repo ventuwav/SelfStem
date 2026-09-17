@@ -22,7 +22,7 @@ export const SIBLING_JOB_ID = "e2e0cafebabe";
 export const SIBLING_TITLE = "E2E Fixture Track (again)";
 export const SOURCE_URL = "local:e2e-fixture.wav";
 
-const STORAGE_KEY = "stemdeck.folders";
+const STORAGE_KEY = "selfstem.folders";
 const STORAGE_VERSION = 2;
 
 /** The library store's shape for one finished track. */
@@ -192,7 +192,7 @@ export async function stubUpdateCheck(page, { available = false } = {}) {
         status: 200,
         contentType: "application/json",
         body: JSON.stringify({
-          name: "StemDeck",
+          name: "SelfStem",
           status: "ok",
           version: "0.5.0",
           ffmpeg_configured: true,

@@ -60,7 +60,7 @@ const linear = (rms) => Math.min(1, rms * 2.5) * 100;
 }
 
 // ── 3. Real stems use the bar ───────────────────────────────────────────────
-// These are median RMS levels measured from a real StemDeck library: four
+// These are median RMS levels measured from a real SelfStem library: four
 // tracks, the vocals, drums, bass and "other" stems of each. They are the
 // levels the meter spends its time at, so they are the levels worth testing.
 {

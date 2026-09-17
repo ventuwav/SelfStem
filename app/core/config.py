@@ -45,7 +45,7 @@ def detect_torch_device() -> str:
     GPU idle and processing 3-5x slower than necessary.
 
     User-facing device selection lives in app.core.settings (demucs_device,
-    default "auto" -> this probe); the STEMDECK_DEMUCS_DEVICE env var seeds
+    default "auto" -> this probe); the SELFSTEM_DEMUCS_DEVICE env var seeds
     that setting's default so env-based deployments keep working."""
     return available_torch_devices()[0]
 
@@ -65,7 +65,7 @@ JOB_ID_RE = re.compile(r"^[a-f0-9]{12}$")
 def _packaged_data_dir() -> Path | None:
     """The data folder of a desktop package, found without being told.
 
-    The desktop shell always passes STEMDECK_DATA_DIR, so this only matters
+    The desktop shell always passes SELFSTEM_DATA_DIR, so this only matters
     when the backend is started some other way: by hand, from a terminal, out
     of the package the shell would normally launch. That used to resolve
     DATA_DIR to `backend/` itself, so the backend read a settings.json that did
@@ -85,14 +85,14 @@ def _packaged_data_dir() -> Path | None:
 
 
 # Runtime knobs -- env-backed so Docker / desktop packaging / local dev can
-# tune without a code edit. STEMDECK_DATA_DIR is the portable app root for
+# tune without a code edit. SELFSTEM_DATA_DIR is the portable app root for
 # mutable runtime data; when unset, a package finds its own (above) and a plain
 # dev checkout stays on the repo-local jobs/ folder.
 _PACKAGED_DATA_DIR = _packaged_data_dir()
 PORTABLE_DATA_DIR_ENABLED = bool(
-    os.environ.get("STEMDECK_DATA_DIR", "").strip() or _PACKAGED_DATA_DIR
+    os.environ.get("SELFSTEM_DATA_DIR", "").strip() or _PACKAGED_DATA_DIR
 )
-DATA_DIR = _env_path("STEMDECK_DATA_DIR", _PACKAGED_DATA_DIR or ROOT)
+DATA_DIR = _env_path("SELFSTEM_DATA_DIR", _PACKAGED_DATA_DIR or ROOT)
 
 
 def _stored_jobs_dir() -> Path | None:
@@ -122,43 +122,43 @@ def _stored_jobs_dir() -> Path | None:
 
 
 # Where extracted stems live. Precedence, most explicit first:
-#   1. STEMDECK_JOBS_DIR         -- a deployment that pinned it (Docker, Unraid,
+#   1. SELFSTEM_JOBS_DIR         -- a deployment that pinned it (Docker, Unraid,
 #                                   CI, tests). Wins over everything: a mounted
 #                                   volume is not the user's to relocate.
 #   2. settings.json             -- what the user chose in Settings (#354).
 #                                   Desktop only; the endpoint that writes it
 #                                   refuses to run anywhere else.
-#   3. STEMDECK_DEFAULT_JOBS_DIR -- the desktop shell's default
-#                                   (~/Documents/StemDeck/jobs). Passed as a
+#   3. SELFSTEM_DEFAULT_JOBS_DIR -- the desktop shell's default
+#                                   (~/Documents/SelfStem/jobs). Passed as a
 #                                   default rather than a pin, so 2 can win.
 #   4. DATA_DIR/jobs             -- portable default
 #   5. <repo>/jobs               -- plain dev checkout
 JOBS_DIR = _env_path(
-    "STEMDECK_JOBS_DIR",
+    "SELFSTEM_JOBS_DIR",
     _stored_jobs_dir()
     or _env_path(
-        "STEMDECK_DEFAULT_JOBS_DIR",
+        "SELFSTEM_DEFAULT_JOBS_DIR",
         (DATA_DIR / "jobs") if PORTABLE_DATA_DIR_ENABLED else (ROOT / "jobs"),
     ),
 )
-CACHE_DIR = _env_path("STEMDECK_CACHE_DIR", DATA_DIR / "cache")
-DOWNLOADS_DIR = _env_path("STEMDECK_DOWNLOADS_DIR", DATA_DIR / "downloads")
-MODELS_DIR = _env_path("STEMDECK_MODELS_DIR", DATA_DIR / "models")
-LOGS_DIR = _env_path("STEMDECK_LOGS_DIR", DATA_DIR / "logs")
-FFMPEG_DIR = _env_path("STEMDECK_FFMPEG_DIR", DATA_DIR / "ffmpeg")
+CACHE_DIR = _env_path("SELFSTEM_CACHE_DIR", DATA_DIR / "cache")
+DOWNLOADS_DIR = _env_path("SELFSTEM_DOWNLOADS_DIR", DATA_DIR / "downloads")
+MODELS_DIR = _env_path("SELFSTEM_MODELS_DIR", DATA_DIR / "models")
+LOGS_DIR = _env_path("SELFSTEM_LOGS_DIR", DATA_DIR / "logs")
+FFMPEG_DIR = _env_path("SELFSTEM_FFMPEG_DIR", DATA_DIR / "ffmpeg")
 FFMPEG_BIN = _env_path(
-    "STEMDECK_FFMPEG",
+    "SELFSTEM_FFMPEG",
     FFMPEG_DIR / ("ffmpeg.exe" if sys.platform.startswith("win") else "ffmpeg"),
 )
 FFPROBE_BIN = _env_path(
-    "STEMDECK_FFPROBE",
+    "SELFSTEM_FFPROBE",
     FFMPEG_DIR / ("ffprobe.exe" if sys.platform.startswith("win") else "ffprobe"),
 )
 # JavaScript runtime for yt-dlp's YouTube challenge solver (#432). Portable
 # builds drop a binary here because nothing is on PATH in a portable install;
 # Docker ships deno on PATH and source checkouts have whatever the developer
 # installed, so both leave this directory absent and yt-dlp resolves its own.
-JS_RUNTIME_DIR = _env_path("STEMDECK_JS_RUNTIME_DIR", DATA_DIR / "jsruntime")
+JS_RUNTIME_DIR = _env_path("SELFSTEM_JS_RUNTIME_DIR", DATA_DIR / "jsruntime")
 
 # Ordered by yt-dlp's own JS challenge provider preference (deno 1000 >
 # node 900 > quickjs 850), so a build that ships more than one still gets the
@@ -222,37 +222,37 @@ def js_solver_available() -> bool:
     return any(shutil.which(exe) for _, exe in _JS_RUNTIME_BINARIES)
 
 
-DEMUCS_MODEL = os.environ.get("STEMDECK_DEMUCS_MODEL", "htdemucs_6s").strip() or "htdemucs_6s"
-MAX_DURATION_SEC = max(60, _env_int("STEMDECK_MAX_DURATION_SEC", 1200))  # 20 min default
-JOB_TTL_SECONDS = max(300, _env_int("STEMDECK_JOB_TTL_SECONDS", 24 * 3600))  # 24 h default
+DEMUCS_MODEL = os.environ.get("SELFSTEM_DEMUCS_MODEL", "htdemucs_6s").strip() or "htdemucs_6s"
+MAX_DURATION_SEC = max(60, _env_int("SELFSTEM_MAX_DURATION_SEC", 1200))  # 20 min default
+JOB_TTL_SECONDS = max(300, _env_int("SELFSTEM_JOB_TTL_SECONDS", 24 * 3600))  # 24 h default
 # TTL for quarantined failed-job dirs (jobs/failed/<id>, kept for diagnostics).
 # Swept unconditionally -- even deployments with a persistent library must not
 # accumulate failure evidence forever.
-FAILED_TTL_SECONDS = max(3600, _env_int("STEMDECK_FAILED_TTL_SECONDS", 7 * 24 * 3600))  # 7 d
+FAILED_TTL_SECONDS = max(3600, _env_int("SELFSTEM_FAILED_TTL_SECONDS", 7 * 24 * 3600))  # 7 d
 # Depth of the import queue: jobs waiting for their turn, not counting the one
 # running. Counted separately by kind, because the two cost wildly different
 # things. A queued upload holds its source file on disk for the whole wait, so
 # 20 of them is already an 8 GB worst case. A queued URL holds nothing at all --
 # it downloads when its turn comes -- so the only real cost is a registry
 # record, and a 50-track playlist should not have to be imported in batches.
-MAX_PENDING_UPLOAD_JOBS = max(1, min(200, _env_int("STEMDECK_MAX_PENDING_JOBS", 20)))
-MAX_PENDING_URL_JOBS = max(1, min(500, _env_int("STEMDECK_MAX_PENDING_URL_JOBS", 200)))
+MAX_PENDING_UPLOAD_JOBS = max(1, min(200, _env_int("SELFSTEM_MAX_PENDING_JOBS", 20)))
+MAX_PENDING_URL_JOBS = max(1, min(500, _env_int("SELFSTEM_MAX_PENDING_URL_JOBS", 200)))
 # Ceiling on how much of a playlist one import may expand to. Enforced twice:
 # as yt-dlp's playlistend so nothing beyond it is ever fetched, and again after
 # normalization. Unrelated to MAX_PENDING_JOBS, which bounds the queue itself --
 # a playlist larger than the queue has room for fills what it can and says so.
-PLAYLIST_MAX_ITEMS = max(1, min(200, _env_int("STEMDECK_PLAYLIST_MAX_ITEMS", 50)))
-TIMEOUT_FFMPEG = _env_int("STEMDECK_TIMEOUT_FFMPEG", 300)
-TIMEOUT_ANALYZE = _env_int("STEMDECK_TIMEOUT_ANALYZE", 120)
-TIMEOUT_DEMUCS_STALL = _env_int("STEMDECK_TIMEOUT_DEMUCS_STALL", 1800)
+PLAYLIST_MAX_ITEMS = max(1, min(200, _env_int("SELFSTEM_PLAYLIST_MAX_ITEMS", 50)))
+TIMEOUT_FFMPEG = _env_int("SELFSTEM_TIMEOUT_FFMPEG", 300)
+TIMEOUT_ANALYZE = _env_int("SELFSTEM_TIMEOUT_ANALYZE", 120)
+TIMEOUT_DEMUCS_STALL = _env_int("SELFSTEM_TIMEOUT_DEMUCS_STALL", 1800)
 # Automatic functional-section analysis. Inference stays on CPU because the
 # persistent Demucs worker deliberately keeps its model resident on the chosen
 # accelerator between jobs; loading a second model beside it would make VRAM
 # use depend on GPU size and the preceding job. The ensemble name remains
 # configurable for deployments evaluating a different compatible checkpoint.
-SECTION_MODEL = os.environ.get("STEMDECK_SECTION_MODEL", "harmonix-all").strip() or "harmonix-all"
-TIMEOUT_SECTIONS = max(60, _env_int("STEMDECK_TIMEOUT_SECTIONS", 30 * 60))
-TIMEOUT_SECTIONS_STALL = max(30, _env_int("STEMDECK_TIMEOUT_SECTIONS_STALL", 120))
+SECTION_MODEL = os.environ.get("SELFSTEM_SECTION_MODEL", "harmonix-all").strip() or "harmonix-all"
+TIMEOUT_SECTIONS = max(60, _env_int("SELFSTEM_TIMEOUT_SECTIONS", 30 * 60))
+TIMEOUT_SECTIONS_STALL = max(30, _env_int("SELFSTEM_TIMEOUT_SECTIONS_STALL", 120))
 # Conservative evidence gates for the section refiner. The first real-song
 # diagnostic found that the upstream decoder emitted 13 Come As You Are spans
 # but our equal-label merge hid six boundaries. It also found a suppressed
@@ -273,16 +273,16 @@ SECTION_REFINEMENT_RECURRENCE_SIMILARITY = 0.85
 SECTION_REFINEMENT_RECURRENCE_LABEL_MARGIN = 0.25
 # On-demand lead/backing vocal split (#275). UVR-MDX-NET Karaoke 2 is an
 # officially-distributed UVR-project model (MIT + credit-to-UVR per the
-# audio-separator README) -- the default. STEMDECK_KARAOKE_MODEL lets a
+# audio-separator README) -- the default. SELFSTEM_KARAOKE_MODEL lets a
 # deployment swap the checkpoint (e.g. to a roformer model) without a code
 # change; see docs/models.md for the license audit behind this default.
-VOCAL_SPLIT_MODEL = os.environ.get("STEMDECK_KARAOKE_MODEL", "").strip() or "UVR_MDXNET_KARA_2.onnx"
+VOCAL_SPLIT_MODEL = os.environ.get("SELFSTEM_KARAOKE_MODEL", "").strip() or "UVR_MDXNET_KARA_2.onnx"
 # A first run downloads the checkpoint (hundreds of MB); generous default so a
 # slow connection isn't mistaken for a stall.
-TIMEOUT_VOCAL_SPLIT = _env_int("STEMDECK_TIMEOUT_VOCAL_SPLIT", 1800)
+TIMEOUT_VOCAL_SPLIT = _env_int("SELFSTEM_TIMEOUT_VOCAL_SPLIT", 1800)
 # Beat-grid stage decodes the whole drums stem (not the 180 s analyze window),
 # so it gets its own, larger budget.
-TIMEOUT_BEATGRID = _env_int("STEMDECK_TIMEOUT_BEATGRID", 300)
+TIMEOUT_BEATGRID = _env_int("SELFSTEM_TIMEOUT_BEATGRID", 300)
 
 # Beat-grid analysis parameters. 22050 Hz is plenty for onset detection (the
 # percussive energy that matters lives well under 11 kHz) and keeps the decode
@@ -301,12 +301,12 @@ TIMEOUT_BEATGRID = _env_int("STEMDECK_TIMEOUT_BEATGRID", 300)
 # (detected 90.0, true ~180) and reproduced on synthetic punk at 176 (detected
 # 117.5). No confidence metric catches it: a half-time grid puts a real drum
 # hit under every beat and scores 94%.
-BEAT_DETECTOR = os.environ.get("STEMDECK_BEAT_DETECTOR", "").strip().lower() or "auto"
+BEAT_DETECTOR = os.environ.get("SELFSTEM_BEAT_DETECTOR", "").strip().lower() or "auto"
 if BEAT_DETECTOR not in ("auto", "model", "librosa"):
     BEAT_DETECTOR = "auto"
 # beat_this checkpoint name; resolved through torch.hub, so it lands under
 # TORCH_HOME (which configure_portable_environment points at MODELS_DIR).
-BEAT_MODEL_CHECKPOINT = os.environ.get("STEMDECK_BEAT_MODEL", "").strip() or "final0"
+BEAT_MODEL_CHECKPOINT = os.environ.get("SELFSTEM_BEAT_MODEL", "").strip() or "final0"
 
 BEATGRID_SR = 22050
 BEATGRID_HOP = 512
@@ -406,7 +406,7 @@ BEATGRID_ONSET_TOL_FRAC = 0.15
 BEATGRID_ONSET_TOL_MAX = 0.07  # absolute ceiling on the above, seconds
 # Max height for the MP4 video stream pulled from YouTube (issue #219).
 # Capped to keep downloads reasonable; 1080p of a full song is large.
-VIDEO_MAX_HEIGHT = max(144, _env_int("STEMDECK_VIDEO_MAX_HEIGHT", 720))
+VIDEO_MAX_HEIGHT = max(144, _env_int("SELFSTEM_VIDEO_MAX_HEIGHT", 720))
 
 
 def ffmpeg_executable() -> str:

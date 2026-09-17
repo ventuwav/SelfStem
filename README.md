@@ -1,55 +1,55 @@
 <div align="center">
 
-<img src="imgs/stemdeck-svg-assets/stemdeck-logo-stacked.svg" alt="StemDeck" width="515" />
+<img src="imgs/selfstem-svg-assets/selfstem-logo-stacked.svg" alt="SelfStem" width="515" />
 
 **Free, local stem separation. No account. No upload. No subscription.**
 
 <div align="center">
-  <a href="https://github.com/stemdeckapp/stemdeck/actions/workflows/ci.yml"><img src="https://github.com/stemdeckapp/stemdeck/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/stemdeckapp/stemdeck/stargazers"><img src="https://img.shields.io/github/stars/stemdeckapp/stemdeck?style=flat-square" alt="GitHub Stars"></a>
-  <a href="https://github.com/stemdeckapp/stemdeck/releases"><img src="https://img.shields.io/github/downloads/stemdeckapp/stemdeck/total?style=flat-square&color=52c65f" alt="Total Downloads"></a>
-  <a href="https://github.com/stemdeckapp/stemdeck/releases/latest"><img src="https://img.shields.io/github/v/release/stemdeckapp/stemdeck?style=flat-square" alt="Latest Release"></a>
-  <a href="https://github.com/stemdeckapp/stemdeck/blob/main/LICENSE"><img src="https://img.shields.io/github/license/stemdeckapp/stemdeck?style=flat-square" alt="License"></a>
+  <a href="https://github.com/selfstemapp/selfstem/actions/workflows/ci.yml"><img src="https://github.com/selfstemapp/selfstem/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/selfstemapp/selfstem/stargazers"><img src="https://img.shields.io/github/stars/selfstemapp/selfstem?style=flat-square" alt="GitHub Stars"></a>
+  <a href="https://github.com/selfstemapp/selfstem/releases"><img src="https://img.shields.io/github/downloads/selfstemapp/selfstem/total?style=flat-square&color=52c65f" alt="Total Downloads"></a>
+  <a href="https://github.com/selfstemapp/selfstem/releases/latest"><img src="https://img.shields.io/github/v/release/selfstemapp/selfstem?style=flat-square" alt="Latest Release"></a>
+  <a href="https://github.com/selfstemapp/selfstem/blob/main/LICENSE"><img src="https://img.shields.io/github/license/selfstemapp/selfstem?style=flat-square" alt="License"></a>
 </div>
 
 <br>
 
 <p align="center"><sub>JOIN THE COMMUNITY</sub></p>
 <div align="center">
-  <a href="https://github.com/stemdeckapp/stemdeck"><img src="https://img.shields.io/badge/GitHub-stemdeckapp-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub"></a>
+  <a href="https://github.com/selfstemapp/selfstem"><img src="https://img.shields.io/badge/GitHub-selfstemapp-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub"></a>
   <a href="https://discord.gg/YhCKsjhcwB"><img src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat-square&logo=discord&logoColor=white" alt="Discord"></a>
-  <a href="https://www.reddit.com/r/StemDeckApp/"><img src="https://img.shields.io/badge/Reddit-r%2FStemDeckApp-FF4500?style=flat-square&logo=reddit&logoColor=white" alt="Reddit"></a>
-  <a href="https://www.instagram.com/stemdeck"><img src="https://img.shields.io/badge/Instagram-stemdeck-E4405F?style=flat-square&logo=instagram&logoColor=white" alt="Instagram"></a>
-  <a href="https://x.com/StemDeckApp"><img src="https://img.shields.io/badge/X-StemDeckApp-000000?style=flat-square&logo=x&logoColor=white" alt="X"></a>
-  <a href="https://stemdeck.app"><img src="https://img.shields.io/badge/Website-stemdeck.app-000000?style=flat-square&logo=safari&logoColor=white" alt="Website"></a>
+  <a href="https://www.reddit.com/r/SelfStemApp/"><img src="https://img.shields.io/badge/Reddit-r%2FSelfStemApp-FF4500?style=flat-square&logo=reddit&logoColor=white" alt="Reddit"></a>
+  <a href="https://www.instagram.com/selfstem"><img src="https://img.shields.io/badge/Instagram-selfstem-E4405F?style=flat-square&logo=instagram&logoColor=white" alt="Instagram"></a>
+  <a href="https://x.com/SelfStemApp"><img src="https://img.shields.io/badge/X-SelfStemApp-000000?style=flat-square&logo=x&logoColor=white" alt="X"></a>
+  <a href="https://selfstem.app"><img src="https://img.shields.io/badge/Website-selfstem.app-000000?style=flat-square&logo=safari&logoColor=white" alt="Website"></a>
 </div>
 
 </div>
 
 <br>
 
-Drop in an MP3, WAV, FLAC, OGG/Opus, MP4, or M4A file, or paste a YouTube URL, and StemDeck splits the audio into up to six stems (vocals, drums, bass, guitar, piano, other). Play them back in a DAW-style multitrack mixer: mute, solo, balance levels, zoom the waveform, loop a region, and export individual stems or a custom mix. Everything runs locally on your own machine.
+Drop in an MP3, WAV, FLAC, OGG/Opus, MP4, or M4A file, or paste a YouTube URL, and SelfStem splits the audio into up to six stems (vocals, drums, bass, guitar, piano, other). Play them back in a DAW-style multitrack mixer: mute, solo, balance levels, zoom the waveform, loop a region, and export individual stems or a custom mix. Everything runs locally on your own machine.
 
-> **What is this?** StemDeck is a stem separation tool, not a downloader. Its main job is processing audio you already own: drag an MP3, WAV, FLAC, OGG, or M4A onto the import bar and go. YouTube support is a convenience for content you have the right to process. StemDeck does not store, cache, or redistribute any downloaded content. Everything happens locally and nothing leaves your machine.
+> **What is this?** SelfStem is a stem separation tool, not a downloader. Its main job is processing audio you already own: drag an MP3, WAV, FLAC, OGG, or M4A onto the import bar and go. YouTube support is a convenience for content you have the right to process. SelfStem does not store, cache, or redistribute any downloaded content. Everything happens locally and nothing leaves your machine.
 
-> StemDeck is a free, open alternative to cloud stem-splitters like Moises and LALAL.AI: no account, no quota, no uploads, no subscription. If you want stems for personal study and prefer to keep things local and free, StemDeck has you covered. If you need the polish, a mobile app, or deeper musician tooling, the commercial products are a better fit.
+> SelfStem is a free, open alternative to cloud stem-splitters like Moises and LALAL.AI: no account, no quota, no uploads, no subscription. If you want stems for personal study and prefer to keep things local and free, SelfStem has you covered. If you need the polish, a mobile app, or deeper musician tooling, the commercial products are a better fit.
 
-![StemDeck screenshot](imgs/screenshot/stemdeck.png)
+![SelfStem screenshot](imgs/screenshot/selfstem.png)
 
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=stemdeckapp%2Fstemdeck&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=selfstemapp%2Fselfstem&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=stemdeckapp/stemdeck&type=date&theme=dark&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=stemdeckapp/stemdeck&type=date&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=stemdeckapp/stemdeck&type=date&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=selfstemapp/selfstem&type=date&theme=dark&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=selfstemapp/selfstem&type=date&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=selfstemapp/selfstem&type=date&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
  </picture>
 </a>
 
 ## We Recommend
 
-StemDeck is free and **does not accept any money, sponsorship, or funding**  from anyone listed below. I share these makers and artists and communities purely for the joy of pointing you toward wonderful people doing beautiful work. Go meet them ❤️
+SelfStem is free and **does not accept any money, sponsorship, or funding**  from anyone listed below. I share these makers and artists and communities purely for the joy of pointing you toward wonderful people doing beautiful work. Go meet them ❤️
 
 | Category | Name | What they do | Link |
 |---|---|---|---|
@@ -97,9 +97,9 @@ StemDeck is free and **does not accept any money, sponsorship, or funding**  fro
 
 ## Honest Comparison
 
-StemDeck is not trying to compete with commercial stem-separation products. It covers the core use case well and stops there. This table exists so you can make an informed choice rather than discover the gaps after the fact.
+SelfStem is not trying to compete with commercial stem-separation products. It covers the core use case well and stops there. This table exists so you can make an informed choice rather than discover the gaps after the fact.
 
-| | StemDeck | Moises / LALAL.AI / similar |
+| | SelfStem | Moises / LALAL.AI / similar |
 |---|---|---|
 | **Price** | Free, forever | Freemium; credits or subscription required for regular use |
 | **Hosting** | Runs entirely on your machine | Cloud; audio must be uploaded to their servers |
@@ -117,22 +117,22 @@ StemDeck is not trying to compete with commercial stem-separation products. It c
 | **Polish** | Functional, hobby-grade UI | Polished, production-grade apps |
 | **Source code** | Open source, forkable, self-hostable | Closed source |
 
-If you need speed, quality, mobile access, or the extra musician tooling, the commercial products are worth the money. If you want stems for personal study, prefer to keep audio private, or just want something that runs locally with no strings attached, StemDeck is enough.
+If you need speed, quality, mobile access, or the extra musician tooling, the commercial products are worth the money. If you want stems for personal study, prefer to keep audio private, or just want something that runs locally with no strings attached, SelfStem is enough.
 
 ---
 
 ## Download
 
-Pre-built installers and zips are attached to each [GitHub Release](https://github.com/stemdeckapp/stemdeck/releases).
+Pre-built installers and zips are attached to each [GitHub Release](https://github.com/selfstemapp/selfstem/releases).
 
 **macOS**
 
 | DMG | GPU | Chip |
 |---|---|---|
-| `StemDeck-macOS-arm64.dmg` | Apple Silicon (MPS) | M1 and later |
-| `StemDeck-macOS-x64.dmg` | CPU only | Intel |
+| `SelfStem-macOS-arm64.dmg` | Apple Silicon (MPS) | M1 and later |
+| `SelfStem-macOS-x64.dmg` | CPU only | Intel |
 
-Open the DMG, drag StemDeck to Applications, and launch it. On first launch the setup screen downloads the Python runtime (~500 MB), FFmpeg, and the Demucs model (~170 MB). Subsequent launches skip setup and start in seconds. No Python or system dependencies required.
+Open the DMG, drag SelfStem to Applications, and launch it. On first launch the setup screen downloads the Python runtime (~500 MB), FFmpeg, and the Demucs model (~170 MB). Subsequent launches skip setup and start in seconds. No Python or system dependencies required.
 
 macOS may show a Gatekeeper prompt on first open — right-click the app and choose Open to bypass it.
 
@@ -140,10 +140,10 @@ macOS may show a Gatekeeper prompt on first open — right-click the app and cho
 
 | Zip | GPU | Approx. size |
 |---|---|---|
-| `StemDeck-Windows-x64.zip` | CPU only | ~700 MB |
-| `StemDeck-Windows-x64.NVIDIA.zip` | NVIDIA CUDA | ~1.6 GB |
+| `SelfStem-Windows-x64.zip` | CPU only | ~700 MB |
+| `SelfStem-Windows-x64.NVIDIA.zip` | NVIDIA CUDA | ~1.6 GB |
 
-Extract the zip anywhere, run `StemDeck.exe`. FFmpeg, the Demucs model, config, and logs live in a `data/` folder next to `StemDeck.exe`, not in AppData; move or copy the whole extracted folder anywhere and it keeps working. On first launch the app verifies the bundled Python runtime and downloads FFmpeg and the Demucs model (~170 MB) into that folder. Subsequent launches skip this and start in seconds. Everything is self-contained; no Python or system dependencies required. Your job/library data stays in its usual location (`~/Documents/StemDeck` by default) and is relocatable anytime from Settings → StemData location.
+Extract the zip anywhere, run `SelfStem.exe`. FFmpeg, the Demucs model, config, and logs live in a `data/` folder next to `SelfStem.exe`, not in AppData; move or copy the whole extracted folder anywhere and it keeps working. On first launch the app verifies the bundled Python runtime and downloads FFmpeg and the Demucs model (~170 MB) into that folder. Subsequent launches skip this and start in seconds. Everything is self-contained; no Python or system dependencies required. Your job/library data stays in its usual location (`~/Documents/SelfStem` by default) and is relocatable anytime from Settings → StemData location.
 
 ---
 
@@ -157,9 +157,9 @@ Extract the zip anywhere, run `StemDeck.exe`. FFmpeg, the Demucs model, config, 
 
 <br>
 
-StemDeck is built on **[Python 3.12](https://python.org)** managed via **[uv](https://github.com/astral-sh/uv)**, with a **[FastAPI](https://fastapi.tiangolo.com)** backend serving REST and Server-Sent Events. Stem separation uses **[Demucs](https://github.com/facebookresearch/demucs)** (`htdemucs_6s`), Meta AI's open-source 6-stem neural network. The optional on-demand lead/backing vocal split runs the UVR-MDX-NET Karaoke 2 model via **[audio-separator](https://github.com/nomadkaraoke/python-audio-separator)**, trained as part of the **[Ultimate Vocal Remover](https://github.com/Anjok07/ultimatevocalremovergui)** project by Anjok07. YouTube audio is fetched via **[yt-dlp](https://github.com/yt-dlp/yt-dlp)**; transcoding and mixing use **[FFmpeg](https://ffmpeg.org)**. BPM detection and key analysis run on **[librosa](https://librosa.org)**; loudness measurement uses **[pyloudnorm](https://github.com/csteinmetz1/pyloudnorm)** (ITU-R BS.1770). The macOS and Windows desktop shells are **[Tauri v2](https://tauri.app)** (Rust/WKWebView on macOS, Rust/WebView2 on Windows). The frontend is vanilla JS with the Web Audio API, no framework and no build step; waveforms are rendered on `<canvas>` using min/max sample rendering.
+SelfStem is built on **[Python 3.12](https://python.org)** managed via **[uv](https://github.com/astral-sh/uv)**, with a **[FastAPI](https://fastapi.tiangolo.com)** backend serving REST and Server-Sent Events. Stem separation uses **[Demucs](https://github.com/facebookresearch/demucs)** (`htdemucs_6s`), Meta AI's open-source 6-stem neural network. The optional on-demand lead/backing vocal split runs the UVR-MDX-NET Karaoke 2 model via **[audio-separator](https://github.com/nomadkaraoke/python-audio-separator)**, trained as part of the **[Ultimate Vocal Remover](https://github.com/Anjok07/ultimatevocalremovergui)** project by Anjok07. YouTube audio is fetched via **[yt-dlp](https://github.com/yt-dlp/yt-dlp)**; transcoding and mixing use **[FFmpeg](https://ffmpeg.org)**. BPM detection and key analysis run on **[librosa](https://librosa.org)**; loudness measurement uses **[pyloudnorm](https://github.com/csteinmetz1/pyloudnorm)** (ITU-R BS.1770). The macOS and Windows desktop shells are **[Tauri v2](https://tauri.app)** (Rust/WKWebView on macOS, Rust/WebView2 on Windows). The frontend is vanilla JS with the Web Audio API, no framework and no build step; waveforms are rendered on `<canvas>` using min/max sample rendering.
 
-*Thanks to the creators and maintainers of all the open-source libraries that make StemDeck possible.*
+*Thanks to the creators and maintainers of all the open-source libraries that make SelfStem possible.*
 
 ---
 
@@ -185,21 +185,21 @@ ARCH=x64 scripts/macos/make-app.sh
 ARCH=x64 scripts/macos/make-dmg.sh
 ```
 
-The `.app` lands at `desktop/src-tauri/target/<target>/release/bundle/macos/StemDeck.app`. The DMG lands at `.build/macos-dist/StemDeck-macOS-<arch>.dmg`.
+The `.app` lands at `desktop/src-tauri/target/<target>/release/bundle/macos/SelfStem.app`. The DMG lands at `.build/macos-dist/SelfStem-macOS-<arch>.dmg`.
 
 To run a fresh build directly without the DMG:
 
 ```sh
-open desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/StemDeck.app
+open desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/SelfStem.app
 ```
 
 If macOS blocks the app with a Gatekeeper prompt, run:
 
 ```sh
-xattr -dr com.apple.quarantine desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/StemDeck.app
+xattr -dr com.apple.quarantine desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/SelfStem.app
 ```
 
-> **Note:** To test a clean first-launch during development, you can wipe previous app data first: `rm -rf ~/Library/Application\ Support/StemDeck`. Don't do this on a real install.
+> **Note:** To test a clean first-launch during development, you can wipe previous app data first: `rm -rf ~/Library/Application\ Support/SelfStem`. Don't do this on a real install.
 
 ---
 
@@ -212,7 +212,7 @@ Python 3.12 or newer, `ffmpeg` on your PATH, and [uv](https://github.com/astral-
 #### macOS / Linux (one-shot)
 
 ```sh
-git clone https://github.com/stemdeckapp/stemdeck stemdeck && cd stemdeck
+git clone https://github.com/selfstemapp/selfstem selfstem && cd selfstem
 ./run.sh setup     # installs ffmpeg + uv, runs uv sync
 ./run.sh start
 ```
@@ -228,7 +228,7 @@ Install prerequisites:
 - [ffmpeg](https://ffmpeg.org/download.html) — `winget install Gyan.FFmpeg` (or Chocolatey: `choco install ffmpeg`)
 
 ```powershell
-git clone https://github.com/stemdeckapp/stemdeck stemdeck; cd stemdeck
+git clone https://github.com/selfstemapp/selfstem selfstem; cd selfstem
 uv sync
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --timeout-graceful-shutdown 5
 ```
@@ -241,7 +241,7 @@ Open <http://localhost:8000>.
 
 ```powershell
 uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
-$env:STEMDECK_DEMUCS_DEVICE = "cuda"
+$env:SELFSTEM_DEMUCS_DEVICE = "cuda"
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --timeout-graceful-shutdown 5
 ```
 
@@ -250,13 +250,13 @@ uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --timeout-graceful-shut
 #### Manual (any platform)
 
 ```sh
-git clone https://github.com/stemdeckapp/stemdeck stemdeck && cd stemdeck
+git clone https://github.com/selfstemapp/selfstem selfstem && cd selfstem
 uv sync
 uv run uvicorn app.main:app --reload --timeout-graceful-shutdown 5
 ```
 
 > `--timeout-graceful-shutdown` bounds how long uvicorn waits for open
-> connections when you stop it. StemDeck keeps a long-lived SSE stream open
+> connections when you stop it. SelfStem keeps a long-lived SSE stream open
 > for the import queue while a browser tab is on the app, so without it
 > Ctrl-C waits for that stream instead of exiting.
 
@@ -271,23 +271,23 @@ Stems land in `./jobs/` on the host. Demucs weights are cached in a named volume
 A prebuilt image is published to GHCR. Tags: `edge` (rolling, rebuilt on every merge to main), `latest` (newest stable release), and `X.Y.Z` (pinned to a release).
 
 ```sh
-docker run -d --name stemdeck -p 8000:8000 \
+docker run -d --name selfstem -p 8000:8000 \
   -v /path/to/jobs:/app/jobs \
   -v /path/to/cache:/cache \
-  -e STEMDECK_PERSIST_LIBRARY=1 \
-  ghcr.io/stemdeckapp/stemdeck:edge
+  -e SELFSTEM_PERSIST_LIBRARY=1 \
+  ghcr.io/selfstemapp/selfstem:edge
 ```
 
-On a Linux host with an NVIDIA GPU (driver + NVIDIA Container Toolkit installed), add `--runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all` and StemDeck auto-detects CUDA. The image already bundles CUDA-enabled torch, so no separate CUDA install is needed.
+On a Linux host with an NVIDIA GPU (driver + NVIDIA Container Toolkit installed), add `--runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all` and SelfStem auto-detects CUDA. The image already bundles CUDA-enabled torch, so no separate CUDA install is needed.
 
 #### Unraid
 
-StemDeck is available in Unraid Community Applications: open **Apps**, search "StemDeck", and install. Map the two volumes to persistent appdata paths:
+SelfStem is available in Unraid Community Applications: open **Apps**, search "SelfStem", and install. Map the two volumes to persistent appdata paths:
 
-- `/app/jobs` -> `/mnt/user/appdata/stemdeck/jobs` (library + stems)
-- `/cache` -> `/mnt/user/appdata/stemdeck/cache` (model weights)
+- `/app/jobs` -> `/mnt/user/appdata/selfstem/jobs` (library + stems)
+- `/cache` -> `/mnt/user/appdata/selfstem/cache` (model weights)
 
-The library is persistent by default (`STEMDECK_PERSIST_LIBRARY=1`), so tracks are never auto-deleted. For GPU acceleration, install the **Nvidia Driver** plugin, then set the container's Extra Parameters to `--runtime=nvidia` (the `NVIDIA_VISIBLE_DEVICES` and `NVIDIA_DRIVER_CAPABILITIES` variables are already in the template). CPU-only works with no extra configuration.
+The library is persistent by default (`SELFSTEM_PERSIST_LIBRARY=1`), so tracks are never auto-deleted. For GPU acceleration, install the **Nvidia Driver** plugin, then set the container's Extra Parameters to `--runtime=nvidia` (the `NVIDIA_VISIBLE_DEVICES` and `NVIDIA_DRIVER_CAPABILITIES` variables are already in the template). CPU-only works with no extra configuration.
 
 #### `run.sh` control script
 
@@ -319,23 +319,23 @@ The library is persistent by default (`STEMDECK_PERSIST_LIBRARY=1`), so tracks a
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `STEMDECK_DEMUCS_DEVICE` | auto | Force Torch device: `cuda`, `mps`, or `cpu`. |
-| `STEMDECK_DEMUCS_MODEL` | `htdemucs_6s` | Demucs model name. |
-| `STEMDECK_JOBS_DIR` | `./jobs` | Where job directories land. |
-| `STEMDECK_DATA_DIR` | (none) | Portable mode root; sets all sub-dirs below to live inside it. |
-| `STEMDECK_CACHE_DIR` | `<data>/cache` | Torch model cache directory. |
-| `STEMDECK_DOWNLOADS_DIR` | `<data>/downloads` | yt-dlp download scratch space. |
-| `STEMDECK_MODELS_DIR` | `<data>/models` | Demucs model weights directory. |
-| `STEMDECK_LOGS_DIR` | `<data>/logs` | Log file output directory. |
-| `STEMDECK_FFMPEG_DIR` | (none) | Directory containing a bundled ffmpeg binary. |
-| `STEMDECK_FFMPEG` | `ffmpeg` | Path to the ffmpeg executable. |
-| `STEMDECK_FFPROBE` | `ffprobe` | Path to the ffprobe executable. |
-| `STEMDECK_MAX_DURATION_SEC` | `1200` | Reject audio longer than this (seconds). |
-| `STEMDECK_JOB_TTL_SECONDS` | `86400` | How long to keep job dirs on disk. |
-| `STEMDECK_MAX_PENDING_JOBS` | `3` | Max queued jobs before returning 503. |
-| `STEMDECK_TIMEOUT_FFMPEG` | `300` | ffmpeg subprocess timeout (seconds). |
-| `STEMDECK_TIMEOUT_ANALYZE` | `120` | Audio analysis timeout (seconds). |
-| `STEMDECK_TIMEOUT_DEMUCS_STALL` | `1800` | Kill Demucs if no output for this many seconds. |
+| `SELFSTEM_DEMUCS_DEVICE` | auto | Force Torch device: `cuda`, `mps`, or `cpu`. |
+| `SELFSTEM_DEMUCS_MODEL` | `htdemucs_6s` | Demucs model name. |
+| `SELFSTEM_JOBS_DIR` | `./jobs` | Where job directories land. |
+| `SELFSTEM_DATA_DIR` | (none) | Portable mode root; sets all sub-dirs below to live inside it. |
+| `SELFSTEM_CACHE_DIR` | `<data>/cache` | Torch model cache directory. |
+| `SELFSTEM_DOWNLOADS_DIR` | `<data>/downloads` | yt-dlp download scratch space. |
+| `SELFSTEM_MODELS_DIR` | `<data>/models` | Demucs model weights directory. |
+| `SELFSTEM_LOGS_DIR` | `<data>/logs` | Log file output directory. |
+| `SELFSTEM_FFMPEG_DIR` | (none) | Directory containing a bundled ffmpeg binary. |
+| `SELFSTEM_FFMPEG` | `ffmpeg` | Path to the ffmpeg executable. |
+| `SELFSTEM_FFPROBE` | `ffprobe` | Path to the ffprobe executable. |
+| `SELFSTEM_MAX_DURATION_SEC` | `1200` | Reject audio longer than this (seconds). |
+| `SELFSTEM_JOB_TTL_SECONDS` | `86400` | How long to keep job dirs on disk. |
+| `SELFSTEM_MAX_PENDING_JOBS` | `3` | Max queued jobs before returning 503. |
+| `SELFSTEM_TIMEOUT_FFMPEG` | `300` | ffmpeg subprocess timeout (seconds). |
+| `SELFSTEM_TIMEOUT_ANALYZE` | `120` | Audio analysis timeout (seconds). |
+| `SELFSTEM_TIMEOUT_DEMUCS_STALL` | `1800` | Kill Demucs if no output for this many seconds. |
 
 `run.sh` also reads: `HOST` (default `127.0.0.1`), `PORT` (default `8765`), `RELOAD=1` (enable uvicorn auto-reload for development), `FOREGROUND=1` (run in foreground instead of backgrounding).
 
@@ -369,13 +369,13 @@ The library is persistent by default (`STEMDECK_PERSIST_LIBRARY=1`), so tracks a
 
 **Demucs runs on CPU only:** check the startup log for `device=mps` or `device=cuda`. If you see `cpu`, your torch install may be CPU-only.
 
-**Transpose is greyed out on another machine:** the pitch stage is built on `AudioWorklet`, which browsers only expose on a *secure context*. `https://` and `localhost` count. A plain `http://192.168.x.x` does not, so a client opening StemDeck over the network is never given the API and transpose cannot work there. Changing the speed still works on such a client, but it resamples instead, so the key moves with it.
+**Transpose is greyed out on another machine:** the pitch stage is built on `AudioWorklet`, which browsers only expose on a *secure context*. `https://` and `localhost` count. A plain `http://192.168.x.x` does not, so a client opening SelfStem over the network is never given the API and transpose cannot work there. Changing the speed still works on such a client, but it resamples instead, so the key moves with it.
 
 Three ways to get a secure context, in order of least effort:
 
 - **Tunnel to localhost.** On the client: `ssh -N -L 8000:localhost:8000 user@host`, then open `http://localhost:8000`. The origin is now localhost, so everything works, including transpose.
-- **Tailscale Serve.** `tailscale serve 8000` on the host publishes StemDeck on your tailnet over real HTTPS with a genuine certificate, no warnings and nothing to install on the client beyond Tailscale itself. Note the plain Tailscale IP (`100.x.y.z`) is *not* a secure context; it has to go through `serve`.
-- **Any HTTPS reverse proxy** in front of StemDeck: Caddy, nginx, or a tunnel like Cloudflare Tunnel.
+- **Tailscale Serve.** `tailscale serve 8000` on the host publishes SelfStem on your tailnet over real HTTPS with a genuine certificate, no warnings and nothing to install on the client beyond Tailscale itself. Note the plain Tailscale IP (`100.x.y.z`) is *not* a secure context; it has to go through `serve`.
+- **Any HTTPS reverse proxy** in front of SelfStem: Caddy, nginx, or a tunnel like Cloudflare Tunnel.
 
 **Page reloaded mid-job:** the job keeps running server-side. Wait for it to finish, then resubmit.
 
@@ -404,23 +404,23 @@ Job state is in-memory. Restart the server and the job list resets, but files pe
 
 ## Disclaimer
 
-StemDeck is a local audio stem separation tool intended for personal study, research, and experimentation. It is not a downloading service. It does not store, cache, or redistribute any audio content. All processing runs on the user's own machine and no audio is transmitted anywhere.
+SelfStem is a local audio stem separation tool intended for personal study, research, and experimentation. It is not a downloading service. It does not store, cache, or redistribute any audio content. All processing runs on the user's own machine and no audio is transmitted anywhere.
 
 YouTube URL support is provided via [yt-dlp](https://github.com/yt-dlp/yt-dlp) as a convenience. Automated downloading may violate YouTube's Terms of Service. You, the user, are solely responsible for ensuring you have the right to process any audio you submit, complying with the terms of service of any site you download from, and respecting the copyright of the material you work with.
 
 You are also responsible for following the licenses of the underlying tools this project depends on (yt-dlp, Demucs, FFmpeg, PyTorch, and others listed in `pyproject.toml`).
 
-The author(s) of StemDeck provide this software "as is", without warranty of any kind, and accept no responsibility or liability for how it is used.
+The author(s) of SelfStem provide this software "as is", without warranty of any kind, and accept no responsibility or liability for how it is used.
 
 ---
 
 ## License
 
-StemDeck is [Apache-2.0](LICENSE).
+SelfStem is [Apache-2.0](LICENSE).
 
 Every download ships a `THIRD_PARTY_NOTICES.txt` and a `licenses/` folder. `licenses/INDEX.txt` lists each packaged Python dependency with its version and license, and each one's full license text sits beside it. That inventory is generated from the packaged interpreter at build time, so it describes what actually shipped rather than what was expected to.
 
-FFmpeg is a GPL build. StemDeck downloads it and runs it as a separate executable, so it does not change StemDeck's own license, and `THIRD_PARTY_NOTICES.txt` carries the written offer of source for the exact build your platform receives.
+FFmpeg is a GPL build. SelfStem downloads it and runs it as a separate executable, so it does not change SelfStem's own license, and `THIRD_PARTY_NOTICES.txt` carries the written offer of source for the exact build your platform receives.
 
 ---
 
@@ -428,12 +428,12 @@ FFmpeg is a GPL build. StemDeck downloads it and runs it as a separate executabl
 
 | Platform | Link |
 |---|---|
-| GitHub | [stemdeckapp/stemdeck](https://github.com/stemdeckapp/stemdeck) |
+| GitHub | [selfstemapp/selfstem](https://github.com/selfstemapp/selfstem) |
 | Discord | [discord.gg/YhCKsjhcwB](https://discord.gg/YhCKsjhcwB) |
-| Reddit | [r/StemDeckApp](https://www.reddit.com/r/StemDeckApp/) |
-| Instagram | [@stemdeck](https://www.instagram.com/stemdeck) |
-| X | [@StemDeckApp](https://x.com/StemDeckApp) |
-| Website | [stemdeck.app](https://stemdeck.app) |
+| Reddit | [r/SelfStemApp](https://www.reddit.com/r/SelfStemApp/) |
+| Instagram | [@selfstem](https://www.instagram.com/selfstem) |
+| X | [@SelfStemApp](https://x.com/SelfStemApp) |
+| Website | [selfstem.app](https://selfstem.app) |
 
 ---
 
@@ -443,11 +443,11 @@ These are for development and testing. Release builds only recognize the variabl
 
 | Variable | Platform | Scope | Description |
 |---|---|---|---|
-| `STEMDECK_DATA_DIR` | all | release | Override the user data directory (default: platform-standard location) |
-| `STEMDECK_ROOT` | all | release | Override the app root directory (default: derived from executable path) |
-| `STEMDECK_PYTHON` | all | **debug builds only** | Override the Python executable path |
-| `STEMDECK_FFMPEG_URL` | Windows, macOS | release | Override the FFmpeg download URL |
-| `STEMDECK_FFPROBE_URL` | macOS | release | Override the ffprobe download URL |
+| `SELFSTEM_DATA_DIR` | all | release | Override the user data directory (default: platform-standard location) |
+| `SELFSTEM_ROOT` | all | release | Override the app root directory (default: derived from executable path) |
+| `SELFSTEM_PYTHON` | all | **debug builds only** | Override the Python executable path |
+| `SELFSTEM_FFMPEG_URL` | Windows, macOS | release | Override the FFmpeg download URL |
+| `SELFSTEM_FFPROBE_URL` | macOS | release | Override the ffprobe download URL |
 
 ---
 

@@ -1,16 +1,16 @@
 THIRD-PARTY NOTICES
 ===================
 
-StemDeck for macOS uses a thin Tauri app plus a downloaded runtime pack.
+SelfStem for macOS uses a thin Tauri app plus a downloaded runtime pack.
 
-Bundled in StemDeck.app:
+Bundled in SelfStem.app:
 
 - Tauri v2
 - The system WebKit WebView provided by macOS
 
 Downloaded during first-run setup:
 
-- StemDeck runtime pack containing Python and Python package dependencies
+- SelfStem runtime pack containing Python and Python package dependencies
 - FFmpeg and ffprobe
 - Demucs model weights
 
@@ -22,9 +22,9 @@ actually shipped.
 
 FFmpeg
 ------
-StemDeck downloads FFmpeg and ffprobe at first run and calls them as
-separate executables. They are not linked into StemDeck and do not
-change StemDeck's own license.
+SelfStem downloads FFmpeg and ffprobe at first run and calls them as
+separate executables. They are not linked into SelfStem and do not
+change SelfStem's own license.
 
 Build: ffmpeg 8.1.1 and ffprobe 8.1.1, from evermeet.cx
 License: GNU General Public License v3 or later
@@ -38,5 +38,5 @@ Written offer of source. The complete corresponding source is:
     https://evermeet.cx/ffmpeg/
 
 If either link stops resolving, open an issue at
-https://github.com/stemdeckapp/stemdeck/issues and the source will be
+https://github.com/selfstemapp/selfstem/issues and the source will be
 provided by another means.

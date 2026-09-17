@@ -38,20 +38,20 @@ def test_host_request_recognizes_own_lan_ip(monkeypatch):
 
 def test_default_is_off_in_desktop_mode(monkeypatch):
     # Desktop keeps network off; the user opts in via the UI toggle.
-    monkeypatch.delenv("STEMDECK_ALLOW_NETWORK", raising=False)
-    monkeypatch.setenv("STEMDECK_DESKTOP", "1")
+    monkeypatch.delenv("SELFSTEM_ALLOW_NETWORK", raising=False)
+    monkeypatch.setenv("SELFSTEM_DESKTOP", "1")
     assert settings_mod._default_allow_network() is False
 
 
 def test_default_is_on_in_server_mode(monkeypatch):
     # Server/Docker deployments open the gate by default.
-    monkeypatch.delenv("STEMDECK_ALLOW_NETWORK", raising=False)
-    monkeypatch.delenv("STEMDECK_DESKTOP", raising=False)
+    monkeypatch.delenv("SELFSTEM_ALLOW_NETWORK", raising=False)
+    monkeypatch.delenv("SELFSTEM_DESKTOP", raising=False)
     assert settings_mod._default_allow_network() is True
 
 
 def test_env_var_pre_enables(monkeypatch):
-    monkeypatch.setenv("STEMDECK_ALLOW_NETWORK", "1")
+    monkeypatch.setenv("SELFSTEM_ALLOW_NETWORK", "1")
     assert settings_mod._default_allow_network() is True
 
 
@@ -111,7 +111,7 @@ def _isolated_settings(monkeypatch, tmp_path):
     device tests neither read nor pollute the developer's real settings.json."""
     monkeypatch.setattr(settings_mod, "_SETTINGS_PATH", tmp_path / "settings.json")
     monkeypatch.setattr(settings_mod, "_state", None)
-    monkeypatch.delenv("STEMDECK_DEMUCS_DEVICE", raising=False)
+    monkeypatch.delenv("SELFSTEM_DEMUCS_DEVICE", raising=False)
 
 
 def test_demucs_device_defaults_to_auto_and_resolves(monkeypatch, _isolated_settings):
@@ -125,7 +125,7 @@ def test_demucs_device_defaults_to_auto_and_resolves(monkeypatch, _isolated_sett
 
 def test_demucs_device_env_seeds_default(monkeypatch, _isolated_settings):
     # Existing env-based deployments keep their forced device as the default.
-    monkeypatch.setenv("STEMDECK_DEMUCS_DEVICE", "cuda")
+    monkeypatch.setenv("SELFSTEM_DEMUCS_DEVICE", "cuda")
     assert settings_mod.get_demucs_device_choice() == "cuda"
     assert settings_mod.get_demucs_device() == "cuda"  # forced, no probe
 
@@ -180,7 +180,7 @@ def test_separation_quality_defaults_to_standard(_isolated_settings):
 
 
 def test_separation_quality_env_seeds_default(monkeypatch, _isolated_settings):
-    monkeypatch.setenv("STEMDECK_SEPARATION_QUALITY", "best")
+    monkeypatch.setenv("SELFSTEM_SEPARATION_QUALITY", "best")
     assert settings_mod.get_separation_quality() == "best"
 
 
@@ -244,11 +244,11 @@ def test_auto_sections_defaults_off(_isolated_settings):
 
 def test_auto_sections_env_can_turn_it_on(monkeypatch, _isolated_settings):
     """A deployment that wants it from first boot opts in explicitly."""
-    monkeypatch.setenv("STEMDECK_AUTO_SECTIONS", "1")
+    monkeypatch.setenv("SELFSTEM_AUTO_SECTIONS", "1")
     assert settings_mod.get_auto_sections() is True
     # Anything else still means off, so a malformed value cannot silently
     # enable a cost the user never asked for.
-    monkeypatch.setenv("STEMDECK_AUTO_SECTIONS", "yes please")
+    monkeypatch.setenv("SELFSTEM_AUTO_SECTIONS", "yes please")
     assert settings_mod.get_auto_sections() is False
 
 
@@ -265,5 +265,5 @@ def test_auto_sections_api_round_trip(_isolated_settings):
 def test_auto_sections_saved_choice_beats_the_env_default(monkeypatch, _isolated_settings):
     """An explicit choice must survive an env var that says otherwise."""
     settings_mod.set_auto_sections(True)
-    monkeypatch.setenv("STEMDECK_AUTO_SECTIONS", "")
+    monkeypatch.setenv("SELFSTEM_AUTO_SECTIONS", "")
     assert settings_mod.get_auto_sections() is True

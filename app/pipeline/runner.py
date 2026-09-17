@@ -29,7 +29,7 @@ from app.pipeline.errors import classify_failure
 from app.pipeline.sections import detect_sections
 from app.pipeline.separate import separate
 
-logger = logging.getLogger("stemdeck.pipeline")
+logger = logging.getLogger("selfstem.pipeline")
 
 
 def _rmtree(path: Path) -> None:

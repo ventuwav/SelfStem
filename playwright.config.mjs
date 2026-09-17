@@ -6,7 +6,7 @@ import { defineConfig, devices } from "@playwright/test";
 //
 // serve.sh seeds a throwaway jobs directory and execs uvicorn against it, so a
 // run can never see or touch a developer's real library.
-const PORT = process.env.STEMDECK_E2E_PORT || "8123";
+const PORT = process.env.SELFSTEM_E2E_PORT || "8123";
 
 export default defineConfig({
   testDir: "tests/e2e",

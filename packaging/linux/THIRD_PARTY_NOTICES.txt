@@ -1,7 +1,7 @@
 THIRD-PARTY NOTICES
 ===================
 
-StemDeck includes third-party open-source software. Each component is
+SelfStem includes third-party open-source software. Each component is
 copyrighted by its respective authors and distributed under its own license.
 
 The full inventory is generated from the packaged Python runtime at build
@@ -59,17 +59,17 @@ Website: https://github.com/bastibe/python-soundfile
 System Requirements (Not Bundled)
 ---------------------------------
 
-FFmpeg is not bundled in the Linux package. On first launch StemDeck downloads a
+FFmpeg is not bundled in the Linux package. On first launch SelfStem downloads a
 static FFmpeg build into your user data directory (or uses a system `ffmpeg`
 already on your PATH). The download is fetched directly from the upstream
-provider, not redistributed by StemDeck. FFmpeg may be distributed under LGPL or
+provider, not redistributed by SelfStem. FFmpeg may be distributed under LGPL or
 GPL terms depending on how the build was compiled.
 
 WebKitGTK and GTK shared libraries are provided by your Linux distribution and
 are not bundled. They are distributed under LGPL terms.
 
 Demucs model weights are not bundled. They are downloaded during first use.
-StemDeck should display the model source and license/usage terms before or
+SelfStem should display the model source and license/usage terms before or
 during download.
 
 Disclaimer
@@ -80,9 +80,9 @@ licenses of every bundled package and generated binary artifact.
 
 FFmpeg (GPL build)
 ------------------
-StemDeck downloads FFmpeg at first run and calls it as a separate
-executable. It is not linked into StemDeck and does not change
-StemDeck's own license.
+SelfStem downloads FFmpeg at first run and calls it as a separate
+executable. It is not linked into SelfStem and does not change
+SelfStem's own license.
 
 Build: ffmpeg-release-amd64-static, from johnvansickle.com/ffmpeg
 License: GNU General Public License v3 or later
@@ -96,5 +96,5 @@ the binary:
   https://git.ffmpeg.org/ffmpeg.git
 
 If either link stops resolving, open an issue at
-https://github.com/stemdeckapp/stemdeck/issues and the source will be
+https://github.com/selfstemapp/selfstem/issues and the source will be
 provided by another means.

@@ -20,7 +20,7 @@ the track.
 **librosa** -- the fallback. Needs no model download and no network, so it keeps
 the feature working on a fresh offline install and on any box where the model
 cannot load. Selected automatically in that case; forceable with
-STEMDECK_BEAT_DETECTOR=librosa.
+SELFSTEM_BEAT_DETECTOR=librosa.
 
 Deliberately *not* madmom: its pretrained models are CC BY-NC-SA 4.0, which
 would quietly make an Apache-2.0 project non-commercial for everyone who
@@ -37,7 +37,7 @@ import threading
 
 from app.core.config import BEAT_DETECTOR, BEAT_MODEL_CHECKPOINT, BEATGRID_HOP
 
-logger = logging.getLogger("stemdeck.beatdetect")
+logger = logging.getLogger("selfstem.beatdetect")
 
 # Loading the checkpoint costs ~1 s and 81 MB of RAM, so the model is built once
 # and reused. Guarded because pipeline stages can run from a worker thread.
@@ -129,6 +129,6 @@ def detect(y: object, sr: int, onset_env: object) -> tuple[list[float], list[flo
         if got is not None:
             return got[0], got[1], "beat_this"
         if BEAT_DETECTOR == "model":
-            raise RuntimeError("beat model required (STEMDECK_BEAT_DETECTOR=model) but unavailable")
+            raise RuntimeError("beat model required (SELFSTEM_BEAT_DETECTOR=model) but unavailable")
     beats, downbeats = _detect_librosa(y, sr, onset_env)
     return beats, downbeats, "librosa"

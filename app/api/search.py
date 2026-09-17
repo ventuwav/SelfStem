@@ -44,7 +44,7 @@ from app.pipeline.search import (
     supported,
 )
 
-logger = logging.getLogger("stemdeck.api")
+logger = logging.getLogger("selfstem.api")
 
 router = APIRouter(tags=["search"])
 

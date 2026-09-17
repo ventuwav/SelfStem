@@ -4,7 +4,7 @@ set -euo pipefail
 ARCH="${ARCH:-arm64}"
 VERSION="${VERSION:-LOCAL_DEV_TEST}"
 VERSION="${VERSION#v}"
-RELEASE_BASE_URL="${RELEASE_BASE_URL:-https://github.com/stemdeckapp/stemdeck/releases/download/v${VERSION}}"
+RELEASE_BASE_URL="${RELEASE_BASE_URL:-https://github.com/selfstemapp/selfstem/releases/download/v${VERSION}}"
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 BUILD_DIR="${REPO_ROOT}/.build"
 STAGING="${BUILD_DIR}/runtime-staging-${ARCH}"
@@ -234,12 +234,12 @@ xattr -cr "$STAGING" 2>/dev/null || true
 find "$STAGING" -name "._*" -delete
 
 export COPYFILE_DISABLE=1
-ARCHIVE_NAME="StemDeck-runtime-macOS-${ARCH}.tar.zst"
+ARCHIVE_NAME="SelfStem-runtime-macOS-${ARCH}.tar.zst"
 ARCHIVE_PATH="${BUILD_DIR}/${ARCHIVE_NAME}"
 if command -v zstd >/dev/null 2>&1; then
   tar --zstd -cf "$ARCHIVE_PATH" -C "$STAGING" runtime
 else
-  ARCHIVE_NAME="StemDeck-runtime-macOS-${ARCH}.tar.gz"
+  ARCHIVE_NAME="SelfStem-runtime-macOS-${ARCH}.tar.gz"
   ARCHIVE_PATH="${BUILD_DIR}/${ARCHIVE_NAME}"
   tar -czf "$ARCHIVE_PATH" -C "$STAGING" runtime
 fi

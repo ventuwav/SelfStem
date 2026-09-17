@@ -1,7 +1,7 @@
 THIRD-PARTY NOTICES
 ===================
 
-StemDeck includes third-party open-source software. Each component is
+SelfStem includes third-party open-source software. Each component is
 copyrighted by its respective authors and distributed under its own license.
 
 The full inventory is generated from the packaged Python runtime at build
@@ -59,13 +59,13 @@ Website: https://github.com/bastibe/python-soundfile
 Downloaded During First-Run Setup
 ---------------------------------
 
-FFmpeg binaries are not bundled in the StemDeck alpha zip. They are downloaded
+FFmpeg binaries are not bundled in the SelfStem alpha zip. They are downloaded
 during first-run setup. FFmpeg builds may be distributed under LGPL or GPL
-terms depending on how they are compiled. StemDeck should display the selected
+terms depending on how they are compiled. SelfStem should display the selected
 FFmpeg build source and license before or during download.
 
-Demucs model weights are not bundled in the StemDeck alpha zip. They are
-downloaded during first use. StemDeck should display the model source and
+Demucs model weights are not bundled in the SelfStem alpha zip. They are
+downloaded during first use. SelfStem should display the model source and
 license/usage terms before or during download.
 
 Disclaimer
@@ -76,9 +76,9 @@ licenses of every bundled package and generated binary artifact.
 
 FFmpeg (GPL build)
 ------------------
-StemDeck downloads FFmpeg at first run and calls it as a separate
-executable. It is not linked into StemDeck and does not change
-StemDeck's own license.
+SelfStem downloads FFmpeg at first run and calls it as a separate
+executable. It is not linked into SelfStem and does not change
+SelfStem's own license.
 
 Build: ffmpeg-n8.1-latest-win64-gpl, from BtbN/FFmpeg-Builds
 License: GNU General Public License v3 or later
@@ -93,5 +93,5 @@ build is:
     https://github.com/BtbN/FFmpeg-Builds
 
 If either link stops resolving, open an issue at
-https://github.com/stemdeckapp/stemdeck/issues and the source will be
+https://github.com/selfstemapp/selfstem/issues and the source will be
 provided by another means.

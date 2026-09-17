@@ -38,7 +38,7 @@ export function ensureMixerStateDefaults() {
 export async function loadMixIntoState(jobId, loadedStemNames = STEM_NAMES) {
   let stored = {};
   try {
-    const data = await storeGet(`stemdeck:mix:${jobId}`, {});
+    const data = await storeGet(`selfstem:mix:${jobId}`, {});
     if (data && typeof data === "object") stored = data;
   } catch (e) { console.warn("[mixer] failed to load mix state:", e); }
   for (const name of allTrackNames()) {
@@ -59,7 +59,7 @@ export function resetMixerState() {
 
 function saveMix() {
   if (!currentJobId) return;
-  storeSetDebounced(`stemdeck:mix:${currentJobId}`, mixerState);
+  storeSetDebounced(`selfstem:mix:${currentJobId}`, mixerState);
 }
 
 /** Push one lane's transpose into whichever engine is playing. */

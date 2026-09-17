@@ -1,6 +1,6 @@
 # Model licensing notes
 
-Records the license basis for ML checkpoints StemDeck downloads at runtime.
+Records the license basis for ML checkpoints SelfStem downloads at runtime.
 Not exhaustive -- only entries where the decision wasn't a simple upstream
 license file are documented here.
 
@@ -20,8 +20,8 @@ audit needed -- an unambiguous upstream license.
 - **Upstream**: https://github.com/mir-aidj/all-in-one and
   https://github.com/openmirlab/all-in-one-infer
 
-StemDeck runs this model on CPU after separation and passes its existing stems.
-The checkpoint is not bundled in StemDeck installers.
+SelfStem runs this model on CPU after separation and passes its existing stems.
+The checkpoint is not bundled in SelfStem installers.
 
 ## UVR-MDX-NET Karaoke 2 (on-demand lead/backing vocal split, #275)
 
@@ -37,7 +37,7 @@ The checkpoint is not bundled in StemDeck installers.
 - **Credit**: Ultimate Vocal Remover (Anjok07) -- https://github.com/Anjok07/ultimatevocalremovergui
 
 This is the shipped default (`VOCAL_SPLIT_MODEL` in `app/core/config.py`,
-overridable via `STEMDECK_KARAOKE_MODEL`).
+overridable via `SELFSTEM_KARAOKE_MODEL`).
 
 ### Rejected alternative: mel_band_roformer_karaoke (aufr33/viperx)
 
@@ -58,10 +58,10 @@ A cleanly-licensed roformer alternative (Kimberley Jensen's
 `Mel-Band-Roformer-Vocal-Model`) was also checked and found to have no
 LICENSE file despite a claim to the contrary surfacing in a web search.
 
-Since StemDeck is free/non-commercial, the practical risk of using an
+Since SelfStem is free/non-commercial, the practical risk of using an
 unlicensed-but-freely-shared community checkpoint is low -- but a
 Boosty-paywall origin is a step past "unlicensed," suggesting the author did
 not intend it for free redistribution at all, and its already-dead HF mirror
 makes it an unreliable thing to depend on regardless of the licensing
-question. `STEMDECK_KARAOKE_MODEL` remains available as an env override for a
+question. `SELFSTEM_KARAOKE_MODEL` remains available as an env override for a
 deployment that wants to accept that risk itself.

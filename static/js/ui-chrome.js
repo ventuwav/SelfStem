@@ -41,7 +41,7 @@ document.addEventListener("click", (e) => {
 // Same shape as the sidebar collapse: a class on .app, a flag in localStorage,
 // no state anywhere else. The lanes re-fit on their own because the wave panel
 // is already watched by a ResizeObserver.
-const PANEL_STORE_PREFIX = "stemdeck.panel.";
+const PANEL_STORE_PREFIX = "selfstem.panel.";
 
 function wirePanelToggles() {
   const app = document.querySelector(".app");

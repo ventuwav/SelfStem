@@ -2,7 +2,7 @@
 
 A post-hoc action on an already-"done" job (POST /api/jobs/{id}/vocal-split
 in app/api/jobs.py), not part of the main separate/collect pipeline. Runs
-UVR-MDX-NET Karaoke 2 (or STEMDECK_KARAOKE_MODEL's override) on the job's
+UVR-MDX-NET Karaoke 2 (or SELFSTEM_KARAOKE_MODEL's override) on the job's
 existing stems/vocals.wav via a fresh subprocess per invocation --
 deliberately not a persistent worker like demucs_worker.py, since this is an
 occasional user-triggered action, not the hot path every job takes (the
@@ -27,7 +27,7 @@ from app.core.registry import set_proc
 from app.core.settings import get_demucs_device
 from app.pipeline.errors import SeparationError
 
-logger = logging.getLogger("stemdeck.pipeline")
+logger = logging.getLogger("selfstem.pipeline")
 
 
 def _spawn_cmd(device: str, vocals_path: Path, out_dir: Path) -> list[str]:
@@ -64,7 +64,7 @@ def split_vocals(job: Job, stems_dir: Path) -> list[str]:
     # The worker arms a watchdog on this and hard-exits when we disappear, so a
     # kill that runs no cleanup (SIGKILL, Force Quit, Task Manager, a crash)
     # cannot leave it running with nobody to collect the result (#519).
-    env["STEMDECK_PARENT_PID"] = str(os.getpid())
+    env["SELFSTEM_PARENT_PID"] = str(os.getpid())
     env["PYTHONIOENCODING"] = "utf-8:replace"
     try:
         import certifi

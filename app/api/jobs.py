@@ -44,7 +44,7 @@ from app.pipeline.runner import _pipeline_lock
 from app.pipeline.vocal_split import split_vocals
 
 router = APIRouter(tags=["jobs"])
-logger = logging.getLogger("stemdeck.api")
+logger = logging.getLogger("selfstem.api")
 
 _ALLOWED_EXTS = frozenset((".mp3", ".wav", ".flac", ".mp4", ".m4a", ".ogg", ".opus"))
 _MAX_UPLOAD_BYTES = 400 * 1024 * 1024  # 400 MB
@@ -179,7 +179,7 @@ async def create_job(request: Request) -> dict[str, str]:
         # so anything accepted now would be orphaned by the restart.
         raise HTTPException(
             status_code=409,
-            detail="Restart StemDeck to finish moving your stems folder before importing",
+            detail="Restart SelfStem to finish moving your stems folder before importing",
         )
     ct = request.headers.get("content-type", "")
     if "multipart/form-data" in ct:
@@ -495,7 +495,7 @@ class SectionItem(BaseModel):
 
 
 # Upper bound on a section list. normalize_sections and the timeline editor
-# both refuse a section shorter than 0.5 s, so the longest track StemDeck
+# both refuse a section shorter than 0.5 s, so the longest track SelfStem
 # accepts (3600 s) cannot legitimately carry more than 7200 of them; 10000
 # leaves headroom while refusing a payload sent to stall the event loop.
 # Without a bound here a 33 MB body held every other request for ~4 seconds,

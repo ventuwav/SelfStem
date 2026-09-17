@@ -24,7 +24,7 @@ def _clean_logger(monkeypatch, tmp_path):
     suite already ran configure_logging() against the real LOGS_DIR, and the
     idempotence guard would otherwise skip attaching a handler here."""
     monkeypatch.setattr(logging_setup, "LOGS_DIR", tmp_path / "logs")
-    root = logging.getLogger("stemdeck")
+    root = logging.getLogger("selfstem")
     saved_level = root.level
     _strip_our_handlers(root)
     yield root
@@ -38,13 +38,13 @@ def _our_handlers(root: logging.Logger) -> list[logging.Handler]:
 
 def test_creates_log_file_on_first_record(_clean_logger, tmp_path):
     logging_setup.configure_logging()
-    log_file = tmp_path / "logs" / "stemdeck.log"
+    log_file = tmp_path / "logs" / "selfstem.log"
     assert not log_file.exists()  # delay=True: nothing written yet
-    logging.getLogger("stemdeck.test").info("hello file log")
+    logging.getLogger("selfstem.test").info("hello file log")
     assert log_file.is_file()
     text = log_file.read_text(encoding="utf-8")
     assert "hello file log" in text
-    assert "stemdeck.test" in text
+    assert "selfstem.test" in text
 
 
 def test_idempotent_across_repeat_calls(_clean_logger):
@@ -57,30 +57,30 @@ def test_rotation_keeps_bounded_backups(_clean_logger, monkeypatch, tmp_path):
     monkeypatch.setattr(logging_setup, "_MAX_BYTES", 200)
     monkeypatch.setattr(logging_setup, "_BACKUP_COUNT", 2)
     logging_setup.configure_logging()
-    log = logging.getLogger("stemdeck.test")
+    log = logging.getLogger("selfstem.test")
     for i in range(30):
         log.info("filler record %03d %s", i, "x" * 40)
     logs_dir = tmp_path / "logs"
-    assert (logs_dir / "stemdeck.log").is_file()
-    assert (logs_dir / "stemdeck.log.1").is_file()
-    assert not (logs_dir / "stemdeck.log.3").exists()  # bounded at backupCount
+    assert (logs_dir / "selfstem.log").is_file()
+    assert (logs_dir / "selfstem.log.1").is_file()
+    assert not (logs_dir / "selfstem.log.3").exists()  # bounded at backupCount
 
 
 def test_level_from_env(_clean_logger, monkeypatch):
-    monkeypatch.setenv("STEMDECK_LOG_LEVEL", "DEBUG")
+    monkeypatch.setenv("SELFSTEM_LOG_LEVEL", "DEBUG")
     logging_setup.configure_logging()
     assert _clean_logger.level == logging.DEBUG
 
 
 def test_debug_shorthand_wins(_clean_logger, monkeypatch):
-    monkeypatch.setenv("STEMDECK_LOG_LEVEL", "WARNING")
-    monkeypatch.setenv("STEMDECK_DEBUG", "1")
+    monkeypatch.setenv("SELFSTEM_LOG_LEVEL", "WARNING")
+    monkeypatch.setenv("SELFSTEM_DEBUG", "1")
     logging_setup.configure_logging()
     assert _clean_logger.level == logging.DEBUG
 
 
 def test_bogus_level_falls_back_to_info(_clean_logger, monkeypatch):
-    monkeypatch.setenv("STEMDECK_LOG_LEVEL", "SHOUTING")
+    monkeypatch.setenv("SELFSTEM_LOG_LEVEL", "SHOUTING")
     logging_setup.configure_logging()
     assert _clean_logger.level == logging.INFO
 

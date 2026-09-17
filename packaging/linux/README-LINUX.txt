@@ -1,21 +1,21 @@
-StemDeck Linux Portable Alpha
+SelfStem Linux Portable Alpha
 =============================
 
 This comes in two variants. Pick one:
 
-- StemDeck-Linux-x64.tar.gz         CPU-only (smaller; runs anywhere)
-- StemDeck-Linux-x64.NVIDIA.tar.gz  NVIDIA/CUDA (larger; much faster on an
+- SelfStem-Linux-x64.tar.gz         CPU-only (smaller; runs anywhere)
+- SelfStem-Linux-x64.NVIDIA.tar.gz  NVIDIA/CUDA (larger; much faster on an
                                     NVIDIA GPU, falls back to CPU if no GPU)
 
 Run
 ---
 
 1. Extract the tarball, e.g.:
-     tar -xzf StemDeck-Linux-x64.tar.gz
+     tar -xzf SelfStem-Linux-x64.tar.gz
 2. Install the runtime prerequisites (see below).
 3. Run the launcher:
-     cd StemDeck-Linux-x64        # or StemDeck-Linux-x64.NVIDIA
-     ./StemDeck
+     cd SelfStem-Linux-x64        # or SelfStem-Linux-x64.NVIDIA
+     ./SelfStem
 4. Let first-run setup prepare local runtime assets.
 
 Nothing needs installing: this folder can be moved or deleted at will.
@@ -23,7 +23,7 @@ Nothing needs installing: this folder can be moved or deleted at will.
 Optional: add a desktop launcher
 --------------------------------
 
-If you would rather launch StemDeck from your applications menu than from a
+If you would rather launch SelfStem from your applications menu than from a
 terminal, run the installer that ships in this folder:
 
     ./install.sh
@@ -32,8 +32,8 @@ It copies this folder to a fixed location and adds an icon and a menu entry.
 It never downloads anything; the version and the CPU/NVIDIA variant come from
 the package you already extracted.
 
-    ./install.sh --local        just me     (~/.local/opt/stemdeck)
-    ./install.sh --global       all users   (/opt/stemdeck, needs sudo)
+    ./install.sh --local        just me     (~/.local/opt/selfstem)
+    ./install.sh --global       all users   (/opt/selfstem, needs sudo)
     ./install.sh --prefix DIR   somewhere else
     ./install.sh --uninstall    remove it again
     ./install.sh --help         all options
@@ -49,7 +49,7 @@ Prerequisites
 -------------
 
 This portable package bundles its own Python runtime (torch + demucs), and
-StemDeck downloads FFmpeg automatically on first launch (or uses a system
+SelfStem downloads FFmpeg automatically on first launch (or uses a system
 `ffmpeg` if one is already on your PATH). The only system libraries you need
 are your distro's WebKitGTK + GTK, which the desktop shell links against.
 
@@ -87,15 +87,15 @@ Notes
 - This is a portable folder, not a system package. Running it in place creates
   no .desktop entry, service, or package-manager integration; ./install.sh adds
   a launcher and icon if you want them.
-- User data lives under $XDG_DATA_HOME/stemdeck (or ~/.local/share/stemdeck).
-- Your stem library is written to ~/Documents/StemDeck/.
+- User data lives under $XDG_DATA_HOME/selfstem (or ~/.local/share/selfstem).
+- Your stem library is written to ~/Documents/SelfStem/.
 - Demucs model weights download from the backend on first use into the data
   directory under models/.
 
 Troubleshooting
 ---------------
 
-- "./StemDeck: error while loading shared libraries" — install the WebKitGTK
+- "./SelfStem: error while loading shared libraries" — install the WebKitGTK
   and GTK packages listed above.
 - A job failing immediately with an FFmpeg error — first-run setup downloads
   FFmpeg automatically; check internet access and retry, or install a system

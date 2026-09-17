@@ -57,7 +57,7 @@ def test_a_failing_command_still_deregisters(tmp_path, monkeypatch):
 
 def test_the_watchdog_arms_when_the_parent_asks(monkeypatch):
     started = []
-    monkeypatch.setenv("STEMDECK_PARENT_PID", "999999")
+    monkeypatch.setenv("SELFSTEM_PARENT_PID", "999999")
     monkeypatch.setattr(
         "threading.Thread",
         lambda *a, **kw: type("T", (), {"start": lambda self: started.append(True)})(),
@@ -71,7 +71,7 @@ def test_the_watchdog_arms_when_the_parent_asks(monkeypatch):
 @pytest.mark.parametrize("value", ["", "not-a-number", "0", "-1"])
 def test_the_watchdog_stays_off_without_a_usable_parent_pid(monkeypatch, value):
     started = []
-    monkeypatch.setenv("STEMDECK_PARENT_PID", value)
+    monkeypatch.setenv("SELFSTEM_PARENT_PID", value)
     monkeypatch.setattr(
         "threading.Thread",
         lambda *a, **kw: type("T", (), {"start": lambda self: started.append(True)})(),
@@ -85,7 +85,7 @@ def test_the_watchdog_stays_off_without_a_usable_parent_pid(monkeypatch, value):
 def test_the_watchdog_never_targets_our_own_pid(monkeypatch):
     # Would hard-exit the worker the moment it started.
     started = []
-    monkeypatch.setenv("STEMDECK_PARENT_PID", str(os.getpid()))
+    monkeypatch.setenv("SELFSTEM_PARENT_PID", str(os.getpid()))
     monkeypatch.setattr(
         "threading.Thread",
         lambda *a, **kw: type("T", (), {"start": lambda self: started.append(True)})(),
@@ -107,7 +107,7 @@ def test_every_worker_spawn_exports_the_parent_pid():
         "app/pipeline/sections.py",
     ):
         src = pathlib.Path(path).read_text()
-        assert "STEMDECK_PARENT_PID" in src, f"{path} spawns a worker without the watchdog"
+        assert "SELFSTEM_PARENT_PID" in src, f"{path} spawns a worker without the watchdog"
 
 
 def test_every_worker_arms_the_watchdog():

@@ -27,7 +27,7 @@ Protocol:
     failure already meant "process is dead, next attempt spawns fresh" --
     the reuse win only applies to the happy path.
   - EOF on stdin (parent closed the pipe) ends the worker's loop cleanly.
-  - STEMDECK_PARENT_PID, if set, arms a watchdog that exits the worker when
+  - SELFSTEM_PARENT_PID, if set, arms a watchdog that exits the worker when
     that process disappears. See _watch_parent for why the pipe alone is not
     enough.
 """

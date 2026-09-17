@@ -331,7 +331,7 @@ test.describe("per-lane transpose", () => {
 });
 
 // AudioWorklet is a secure-context API, so a client reaching a networked
-// StemDeck over http://<lan-ip> is never given it and transpose cannot work
+// SelfStem over http://<lan-ip> is never given it and transpose cannot work
 // there at all. Nothing can be done about that in the page; what the page owes
 // the user is the actual reason, because "needs Web Audio" sent people looking
 // for a missing browser feature while Web Audio was working fine (#552).

@@ -690,7 +690,7 @@ export function createChunkedAudioEngine(stems, { onTime, onEnded, context } = {
     }
     if (!_duration) {
       _loadError = unreadable
-        ? "This track's audio files are in a format StemDeck could not read."
+        ? "This track's audio files are in a format SelfStem could not read."
         : unreachable
           ? "Could not load this track's audio files."
           : "This track's audio files contain no audio.";

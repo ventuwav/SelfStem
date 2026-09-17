@@ -1,5 +1,5 @@
-// StemDeck mobile — vanilla port of the Claude Design prototype
-// (design/mobile/StemDeck-Mobile.dc.html). No framework, no build step,
+// SelfStem mobile — vanilla port of the Claude Design prototype
+// (design/mobile/SelfStem-Mobile.dc.html). No framework, no build step,
 // to match the rest of static/. Library + Mixer are wired to the real API
 // (GET /api/jobs, /api/jobs/{id}, the Web Audio engine, mixdown export).
 // Extract is still mock pending the SSE/upload wiring (next step).

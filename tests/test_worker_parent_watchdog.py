@@ -1,6 +1,6 @@
 """The separation worker must not outlive whoever spawned it.
 
-Closing StemDeck has to leave nothing behind. The worker holds the GPU and is
+Closing SelfStem has to leave nothing behind. The worker holds the GPU and is
 the one child that can run for minutes, so it cannot depend on the parent
 getting a chance to clean up: Force Quit, Task Manager and a crash all skip
 that entirely.
@@ -53,7 +53,7 @@ def test_worker_exits_when_its_parent_disappears(tmp_path):
             time.sleep(0.1)
         """
     )
-    env = {**os.environ, "STEMDECK_PARENT_PID": str(parent.pid)}
+    env = {**os.environ, "SELFSTEM_PARENT_PID": str(parent.pid)}
     worker = subprocess.Popen(
         [sys.executable, "-c", script],
         env=env,
@@ -81,7 +81,7 @@ def test_worker_exits_when_its_parent_disappears(tmp_path):
 
 
 def test_worker_ignores_an_unset_or_bogus_parent_pid(monkeypatch):
-    """A worker run by hand (no STEMDECK_PARENT_PID) must not arm the watchdog
+    """A worker run by hand (no SELFSTEM_PARENT_PID) must not arm the watchdog
     and shoot itself."""
     import threading as _threading
 
@@ -95,7 +95,7 @@ def test_worker_ignores_an_unset_or_bogus_parent_pid(monkeypatch):
     )
 
     for value in ("", "   ", "not-a-number", "0", "-5", str(os.getpid())):
-        monkeypatch.setenv("STEMDECK_PARENT_PID", value)
+        monkeypatch.setenv("SELFSTEM_PARENT_PID", value)
         _process_mod.arm_parent_watchdog()
     assert started == [], "watchdog armed on a pid it should have ignored"
 
@@ -130,4 +130,4 @@ def test_the_worker_is_spawned_with_the_parent_pid(monkeypatch):
     finally:
         separate._worker.clear()
 
-    assert captured["env"]["STEMDECK_PARENT_PID"] == str(os.getpid())
+    assert captured["env"]["SELFSTEM_PARENT_PID"] == str(os.getpid())

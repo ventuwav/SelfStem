@@ -20,7 +20,7 @@ from app.core import settings as _settings
 
 def test_settings_are_mirrored_when_the_shell_asks_for_it(tmp_path, monkeypatch):
     mirror = tmp_path / "shared" / "settings.json"
-    monkeypatch.setenv("STEMDECK_SETTINGS_MIRROR", str(mirror))
+    monkeypatch.setenv("SELFSTEM_SETTINGS_MIRROR", str(mirror))
 
     _settings.set_max_duration_sec(11 * 60)
 
@@ -30,7 +30,7 @@ def test_settings_are_mirrored_when_the_shell_asks_for_it(tmp_path, monkeypatch)
 
 def test_the_mirror_tracks_later_changes(tmp_path, monkeypatch):
     mirror = tmp_path / "shared" / "settings.json"
-    monkeypatch.setenv("STEMDECK_SETTINGS_MIRROR", str(mirror))
+    monkeypatch.setenv("SELFSTEM_SETTINGS_MIRROR", str(mirror))
 
     _settings.set_max_duration_sec(5 * 60)
     _settings.set_max_duration_sec(9 * 60)
@@ -43,7 +43,7 @@ def test_the_mirror_tracks_later_changes(tmp_path, monkeypatch):
 def test_no_mirror_is_written_when_the_shell_does_not_ask(tmp_path, monkeypatch):
     # Docker and a source checkout keep their data outside the install already,
     # so there is nothing to preserve and nothing should be created.
-    monkeypatch.delenv("STEMDECK_SETTINGS_MIRROR", raising=False)
+    monkeypatch.delenv("SELFSTEM_SETTINGS_MIRROR", raising=False)
     stray = tmp_path / "shared"
 
     _settings.set_max_duration_sec(7 * 60)
@@ -57,7 +57,7 @@ def test_a_failing_mirror_never_fails_the_setting(tmp_path, monkeypatch):
     # still be saved and reported as saved.
     blocker = tmp_path / "not-a-dir"
     blocker.write_text("", encoding="utf-8")
-    monkeypatch.setenv("STEMDECK_SETTINGS_MIRROR", str(blocker / "nested" / "settings.json"))
+    monkeypatch.setenv("SELFSTEM_SETTINGS_MIRROR", str(blocker / "nested" / "settings.json"))
 
     assert _settings.set_max_duration_sec(6 * 60) is not None
     assert _settings.get_max_duration_sec() == 6 * 60
@@ -76,7 +76,7 @@ def test_existing_settings_are_mirrored_without_waiting_for_a_change(tmp_path, m
     )
     _settings._state = None  # a fresh process, reading what is already on disk
     mirror = tmp_path / "shared" / "settings.json"
-    monkeypatch.setenv("STEMDECK_SETTINGS_MIRROR", str(mirror))
+    monkeypatch.setenv("SELFSTEM_SETTINGS_MIRROR", str(mirror))
 
     _settings.get_jobs_dir()
 
@@ -91,7 +91,7 @@ def test_a_first_run_never_clobbers_an_existing_mirror(tmp_path, monkeypatch):
     mirror = tmp_path / "shared" / "settings.json"
     mirror.parent.mkdir(parents=True)
     mirror.write_text(json.dumps({"jobs_dir": str(tmp_path / "MyStems")}), encoding="utf-8")
-    monkeypatch.setenv("STEMDECK_SETTINGS_MIRROR", str(mirror))
+    monkeypatch.setenv("SELFSTEM_SETTINGS_MIRROR", str(mirror))
     _settings._state = None
     assert not _settings._SETTINGS_PATH.exists()
 
@@ -104,7 +104,7 @@ def test_mirror_holds_the_relocated_stems_folder(tmp_path, monkeypatch):
     # The reported symptom: a new install went back to the default jobs folder
     # because jobs_dir only existed inside the old install directory.
     mirror = tmp_path / "shared" / "settings.json"
-    monkeypatch.setenv("STEMDECK_SETTINGS_MIRROR", str(mirror))
+    monkeypatch.setenv("SELFSTEM_SETTINGS_MIRROR", str(mirror))
     chosen = tmp_path / "MyStems"
     chosen.mkdir()
 

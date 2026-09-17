@@ -298,7 +298,7 @@ test.describe("waveform zoom", () => {
   // pixels (barWidth 3, barGap 2), which holds only if it re-renders rather than
   // letting a fixed-size canvas stretch.
   test("the streaming path re-renders its canvases instead of stretching them", async ({ page }) => {
-    await page.addInitScript(() => window.localStorage.setItem("stemdeck.audioEngine", "0"));
+    await page.addInitScript(() => window.localStorage.setItem("selfstem.audioEngine", "0"));
     await openStudio(page, { tauri: true });
     await page.waitForFunction(
       () => {

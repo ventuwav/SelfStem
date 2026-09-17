@@ -78,7 +78,7 @@ def arm_parent_watchdog() -> None:
     """
     import threading
 
-    raw = os.environ.get("STEMDECK_PARENT_PID", "").strip()
+    raw = os.environ.get("SELFSTEM_PARENT_PID", "").strip()
     if not raw:
         return
     try:

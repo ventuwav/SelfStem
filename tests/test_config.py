@@ -10,12 +10,12 @@ def test_data_dir_moves_default_runtime_dirs(monkeypatch, tmp_path: Path):
 
     original = config
     data_dir = tmp_path / "portable-data"
-    monkeypatch.setenv("STEMDECK_DATA_DIR", str(data_dir))
-    monkeypatch.delenv("STEMDECK_JOBS_DIR", raising=False)
-    monkeypatch.delenv("STEMDECK_CACHE_DIR", raising=False)
-    monkeypatch.delenv("STEMDECK_DOWNLOADS_DIR", raising=False)
-    monkeypatch.delenv("STEMDECK_MODELS_DIR", raising=False)
-    monkeypatch.delenv("STEMDECK_LOGS_DIR", raising=False)
+    monkeypatch.setenv("SELFSTEM_DATA_DIR", str(data_dir))
+    monkeypatch.delenv("SELFSTEM_JOBS_DIR", raising=False)
+    monkeypatch.delenv("SELFSTEM_CACHE_DIR", raising=False)
+    monkeypatch.delenv("SELFSTEM_DOWNLOADS_DIR", raising=False)
+    monkeypatch.delenv("SELFSTEM_MODELS_DIR", raising=False)
+    monkeypatch.delenv("SELFSTEM_LOGS_DIR", raising=False)
     try:
         reloaded = importlib.reload(config)
         assert data_dir.resolve() == reloaded.DATA_DIR
@@ -25,7 +25,7 @@ def test_data_dir_moves_default_runtime_dirs(monkeypatch, tmp_path: Path):
         assert data_dir.resolve() / "models" == reloaded.MODELS_DIR
         assert data_dir.resolve() / "logs" == reloaded.LOGS_DIR
     finally:
-        monkeypatch.delenv("STEMDECK_DATA_DIR", raising=False)
+        monkeypatch.delenv("SELFSTEM_DATA_DIR", raising=False)
         importlib.reload(original)
 
 
@@ -35,15 +35,15 @@ def test_jobs_dir_override_wins_over_data_dir(monkeypatch, tmp_path: Path):
     original = config
     data_dir = tmp_path / "portable-data"
     jobs_dir = tmp_path / "custom-jobs"
-    monkeypatch.setenv("STEMDECK_DATA_DIR", str(data_dir))
-    monkeypatch.setenv("STEMDECK_JOBS_DIR", str(jobs_dir))
+    monkeypatch.setenv("SELFSTEM_DATA_DIR", str(data_dir))
+    monkeypatch.setenv("SELFSTEM_JOBS_DIR", str(jobs_dir))
     try:
         reloaded = importlib.reload(config)
         assert data_dir.resolve() == reloaded.DATA_DIR
         assert jobs_dir.resolve() == reloaded.JOBS_DIR
     finally:
-        monkeypatch.delenv("STEMDECK_DATA_DIR", raising=False)
-        monkeypatch.delenv("STEMDECK_JOBS_DIR", raising=False)
+        monkeypatch.delenv("SELFSTEM_DATA_DIR", raising=False)
+        monkeypatch.delenv("SELFSTEM_JOBS_DIR", raising=False)
         importlib.reload(original)
 
 
@@ -54,14 +54,14 @@ def test_ffmpeg_executable_prefers_portable_binary(monkeypatch, tmp_path: Path):
     ffmpeg = tmp_path / "ffmpeg" / "ffmpeg"
     ffmpeg.parent.mkdir()
     ffmpeg.write_text("#!/bin/sh\n", encoding="utf-8")
-    monkeypatch.setenv("STEMDECK_DATA_DIR", str(tmp_path))
-    monkeypatch.setenv("STEMDECK_FFMPEG", str(ffmpeg))
+    monkeypatch.setenv("SELFSTEM_DATA_DIR", str(tmp_path))
+    monkeypatch.setenv("SELFSTEM_FFMPEG", str(ffmpeg))
     try:
         reloaded = importlib.reload(config)
         assert reloaded.ffmpeg_executable() == str(ffmpeg.resolve())
     finally:
-        monkeypatch.delenv("STEMDECK_DATA_DIR", raising=False)
-        monkeypatch.delenv("STEMDECK_FFMPEG", raising=False)
+        monkeypatch.delenv("SELFSTEM_DATA_DIR", raising=False)
+        monkeypatch.delenv("SELFSTEM_FFMPEG", raising=False)
         importlib.reload(original)
 
 
@@ -69,7 +69,7 @@ def test_configure_portable_environment_leaves_dev_cache_env_alone(monkeypatch):
     import app.core.config as config
 
     original = config
-    monkeypatch.delenv("STEMDECK_DATA_DIR", raising=False)
+    monkeypatch.delenv("SELFSTEM_DATA_DIR", raising=False)
     monkeypatch.delenv("XDG_CACHE_HOME", raising=False)
     monkeypatch.delenv("TORCH_HOME", raising=False)
     try:
@@ -78,7 +78,7 @@ def test_configure_portable_environment_leaves_dev_cache_env_alone(monkeypatch):
         assert "XDG_CACHE_HOME" not in os.environ
         assert "TORCH_HOME" not in os.environ
     finally:
-        monkeypatch.delenv("STEMDECK_DATA_DIR", raising=False)
+        monkeypatch.delenv("SELFSTEM_DATA_DIR", raising=False)
         monkeypatch.delenv("XDG_CACHE_HOME", raising=False)
         monkeypatch.delenv("TORCH_HOME", raising=False)
         importlib.reload(original)
@@ -86,7 +86,7 @@ def test_configure_portable_environment_leaves_dev_cache_env_alone(monkeypatch):
 
 # --- packaged data directory discovery (#459) --------------------------------
 #
-# The desktop shell always passes STEMDECK_DATA_DIR. These cover what happens
+# The desktop shell always passes SELFSTEM_DATA_DIR. These cover what happens
 # when the backend is started some other way: by hand, from a terminal, out of
 # the package the shell would normally launch. That used to resolve DATA_DIR to
 # backend/ itself, so the backend read a settings.json that did not exist and
@@ -96,7 +96,7 @@ def test_configure_portable_environment_leaves_dev_cache_env_alone(monkeypatch):
 def test_packaged_layout_finds_the_data_dir_beside_the_backend(tmp_path, monkeypatch):
     from app.core import config
 
-    package = tmp_path / "StemDeck-Windows-x64"
+    package = tmp_path / "SelfStem-Windows-x64"
     backend = package / "backend"
     data = package / "data"
     backend.mkdir(parents=True)
@@ -111,7 +111,7 @@ def test_a_source_checkout_is_not_a_package(tmp_path, monkeypatch):
     named backend, so neither changes behaviour."""
     from app.core import config
 
-    for name in ("stemdeck", "app"):
+    for name in ("selfstem", "app"):
         root = tmp_path / name
         (root / "data").mkdir(parents=True)
         monkeypatch.setattr(config, "ROOT", root)

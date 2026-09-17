@@ -50,7 +50,7 @@ export function inputForPitch(semitones) {
  *
  * AudioWorklet is a secure-context API. A browser on http://<lan-ip> is never
  * given it, so the SoundTouch stage cannot be built at all -- which is the
- * common case by far, StemDeck hosted on the network and opened from another
+ * common case by far, SelfStem hosted on the network and opened from another
  * machine. "Needs Web Audio" sent those people looking for a missing browser
  * feature when Web Audio was working fine and the origin was the problem
  * (#552). Only on an already-secure origin is a genuine worklet failure the

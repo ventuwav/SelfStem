@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# stemdeck dev server control: setup | start | stop | restart | status
+# selfstem dev server control: setup | start | stop | restart | status
 
 set -euo pipefail
 
@@ -10,8 +10,8 @@ PORT="${PORT:-8000}"
 RELOAD="${RELOAD:-0}"
 # Treat the self-hosted server as a persistent, user-managed library (like the
 # desktop app): opt out of the 24h job TTL sweep so processed tracks are not
-# auto-deleted. Override with STEMDECK_PERSIST_LIBRARY=0 for disk-hygiene mode.
-export STEMDECK_PERSIST_LIBRARY="${STEMDECK_PERSIST_LIBRARY:-1}"
+# auto-deleted. Override with SELFSTEM_PERSIST_LIBRARY=0 for disk-hygiene mode.
+export SELFSTEM_PERSIST_LIBRARY="${SELFSTEM_PERSIST_LIBRARY:-1}"
 FOREGROUND="${FOREGROUND:-0}"
 PID_FILE=".run/uvicorn.pid"
 LOG_FILE=".run/uvicorn.log"
@@ -66,7 +66,7 @@ stop() {
         echo "not running"
         # Sweep a stray server for THIS port only. A bare
         # "uvicorn app.main:app" pattern also matches the backend that
-        # StemDeck.app spawns, so it would kill the desktop app out from
+        # SelfStem.app spawns, so it would kill the desktop app out from
         # under the user (#352).
         pkill -f "uvicorn app.main:app.*--port $PORT" 2>/dev/null || true
         rm -f "$PID_FILE"

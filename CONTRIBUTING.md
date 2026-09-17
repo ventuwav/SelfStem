@@ -1,18 +1,18 @@
-# Contributing to StemDeck
+# Contributing to SelfStem
 
-Thanks for your interest in StemDeck - free, local stem separation for musicians. Contributions of
+Thanks for your interest in SelfStem - free, local stem separation for musicians. Contributions of
 all kinds are welcome, whether you write code or not.
 
 By participating you agree to follow our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Ways to contribute
 
-- **Report a bug** - open a [Bug report](https://github.com/stemdeckapp/stemdeck/issues/new/choose).
-  Include your OS, the StemDeck version (Help icon -> About), and clear steps to reproduce.
-- **Suggest a feature** - open a [Feature request](https://github.com/stemdeckapp/stemdeck/issues/new/choose).
+- **Report a bug** - open a [Bug report](https://github.com/selfstemapp/selfstem/issues/new/choose).
+  Include your OS, the SelfStem version (Help icon -> About), and clear steps to reproduce.
+- **Suggest a feature** - open a [Feature request](https://github.com/selfstemapp/selfstem/issues/new/choose).
 - **Improve the docs** - fixes and clarifications to the README or these guides are always useful.
 - **Write code** - bug fixes and features. For anything large, please open an issue or a
-  [Discussion](https://github.com/stemdeckapp/stemdeck/discussions) first so we can agree on the
+  [Discussion](https://github.com/selfstemapp/selfstem/discussions) first so we can agree on the
   approach before you invest time.
 - **Found a security issue?** Do not open a public issue - see [SECURITY.md](SECURITY.md).
 
@@ -73,10 +73,10 @@ New API endpoints and pipeline stages should come with tests under `tests/`. The
 
 ## License
 
-StemDeck is licensed under the [Apache License 2.0](LICENSE). By contributing, you agree that your
+SelfStem is licensed under the [Apache License 2.0](LICENSE). By contributing, you agree that your
 contributions are licensed under the same terms.
 
 ## Questions
 
-Open a [Discussion](https://github.com/stemdeckapp/stemdeck/discussions) or join the
-[Discord](https://discord.gg/YhCKsjhcwB). Thanks for helping make StemDeck better.
+Open a [Discussion](https://github.com/selfstemapp/selfstem/discussions) or join the
+[Discord](https://discord.gg/YhCKsjhcwB). Thanks for helping make SelfStem better.

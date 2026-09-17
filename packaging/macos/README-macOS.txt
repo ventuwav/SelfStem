@@ -1,28 +1,28 @@
-StemDeck for macOS
+SelfStem for macOS
 ==================
 
 Install:
 
-1. Open the StemDeck DMG.
-2. Drag StemDeck.app to Applications.
-3. Open StemDeck from Applications.
+1. Open the SelfStem DMG.
+2. Drag SelfStem.app to Applications.
+3. Open SelfStem from Applications.
 
 First launch:
 
-- StemDeck is a thin native app. It downloads a pinned, checksummed StemDeck
+- SelfStem is a thin native app. It downloads a pinned, checksummed SelfStem
   runtime pack on first launch.
 - The runtime installs to:
-  ~/Library/Application Support/StemDeck/runtime
+  ~/Library/Application Support/SelfStem/runtime
 - FFmpeg and ffprobe install to:
-  ~/Library/Application Support/StemDeck/ffmpeg
+  ~/Library/Application Support/SelfStem/ffmpeg
 - Demucs model weights download on first use and are cached under:
-  ~/Library/Application Support/StemDeck/models
+  ~/Library/Application Support/SelfStem/models
 
 Uninstall:
 
-1. Delete /Applications/StemDeck.app.
+1. Delete /Applications/SelfStem.app.
 2. To remove runtime files, jobs, caches, models, and logs, delete:
-   ~/Library/Application Support/StemDeck
+   ~/Library/Application Support/SelfStem
 
 Notes:
 

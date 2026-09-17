@@ -62,15 +62,15 @@ def test_deletion_is_off_unless_asked_for(monkeypatch):
     silently emptied a user's library within a day (#459)."""
     from app.core.settings import get_auto_delete_jobs
 
-    for env in ("STEMDECK_DESKTOP", "STEMDECK_PERSIST_LIBRARY"):
+    for env in ("SELFSTEM_DESKTOP", "SELFSTEM_PERSIST_LIBRARY"):
         monkeypatch.delenv(env, raising=False)
     assert get_auto_delete_jobs() is False
 
     # The two variables that used to be the only thing standing between a user
     # and an empty library are now redundant rather than load-bearing.
-    monkeypatch.setenv("STEMDECK_DESKTOP", "1")
+    monkeypatch.setenv("SELFSTEM_DESKTOP", "1")
     assert get_auto_delete_jobs() is False
-    monkeypatch.setenv("STEMDECK_PERSIST_LIBRARY", "1")
+    monkeypatch.setenv("SELFSTEM_PERSIST_LIBRARY", "1")
     assert get_auto_delete_jobs() is False
 
 
@@ -79,7 +79,7 @@ def test_persist_library_zero_still_opts_into_deletion(monkeypatch):
     (the Unraid template exposes it, run.sh defaults it to 1)."""
     from app.core.settings import get_auto_delete_jobs
 
-    monkeypatch.setenv("STEMDECK_PERSIST_LIBRARY", "0")
+    monkeypatch.setenv("SELFSTEM_PERSIST_LIBRARY", "0")
     assert get_auto_delete_jobs() is True
 
 
@@ -89,11 +89,11 @@ def test_stored_setting_beats_the_environment(monkeypatch):
     how long their own work is kept is theirs to decide."""
     from app.core.settings import get_auto_delete_jobs, set_auto_delete_jobs
 
-    monkeypatch.setenv("STEMDECK_PERSIST_LIBRARY", "0")
+    monkeypatch.setenv("SELFSTEM_PERSIST_LIBRARY", "0")
     set_auto_delete_jobs(False)
     assert get_auto_delete_jobs() is False
 
-    monkeypatch.setenv("STEMDECK_PERSIST_LIBRARY", "1")
+    monkeypatch.setenv("SELFSTEM_PERSIST_LIBRARY", "1")
     set_auto_delete_jobs(True)
     assert get_auto_delete_jobs() is True
 
