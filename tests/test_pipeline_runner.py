@@ -431,11 +431,11 @@ def test_presence_from_rms_all_silent():
     assert _presence_from_rms({"vocals": 0.0, "drums": 0.0}) == {"vocals": 0, "drums": 0}
 
 
-def _common_stage_patches(job_dir: Path, sections):
+def _common_stage_patches(job_dir: Path, structure):
     section_patch = (
-        patch("app.pipeline.runner.detect_sections", side_effect=sections)
-        if isinstance(sections, BaseException)
-        else patch("app.pipeline.runner.detect_sections", return_value=sections)
+        patch("app.pipeline.runner.analyze_stems", side_effect=structure)
+        if isinstance(structure, BaseException)
+        else patch("app.pipeline.runner.analyze_stems", return_value=structure)
     )
     return (
         patch("app.pipeline.runner.analyze"),
@@ -455,18 +455,22 @@ def test_common_pipeline_stores_automatic_section_suggestions(tmp_path: Path):
     job_dir = tmp_path / job.id
     stems_dir = job_dir / "stems"
     stems_dir.mkdir(parents=True)
-    suggested = [
-        {
-            "id": "auto-001",
-            "name": "Verse",
-            "kind": "verse",
-            "start": 0.0,
-            "end": 60.0,
-            "color": "#00c8a0",
-        }
-    ]
+    structure = {
+        "sections": [
+            {
+                "id": 1,
+                "label": "intro",
+                "start_time": 0.0,
+                "end_time": 60.0,
+                "start_bar": 1,
+                "end_bar": 32,
+                "duration_bars": 32,
+                "events": [],
+            }
+        ]
+    }
 
-    patches = _common_stage_patches(job_dir, suggested)
+    patches = _common_stage_patches(job_dir, structure)
     with (
         patches[0],
         patches[1],
@@ -476,13 +480,27 @@ def test_common_pipeline_stores_automatic_section_suggestions(tmp_path: Path):
         patches[5],
         patches[6],
         patches[7],
-        patches[8] as detect,
+        patches[8] as analyze_stems_mock,
     ):
         _run_common(job, job_dir / "source.wav", job_dir)
 
-    assert job.sections == suggested
+    assert job.sections == [
+        {
+            "id": "structure-001",
+            "name": "Intro",
+            "start": 0.0,
+            "end": 60.0,
+            "color": "#4a7fff",
+            "start_bar": 1,
+            "end_bar": 32,
+            "duration_bars": 32,
+            "events": [],
+        }
+    ]
     assert job.sections_source == "automatic"
-    detect.assert_called_once_with(job, stems_dir, 60.0)
+    analyze_stems_mock.assert_called_once_with(
+        stems_dir, 60.0, bpm=job.bpm, key=job.key, scale=job.scale
+    )
     assert "sections" in (job.stage_timings or {})
 
 
@@ -497,7 +515,7 @@ def test_common_pipeline_skips_sections_when_the_user_turned_them_off(tmp_path: 
     job_dir = tmp_path / job.id
     (job_dir / "stems").mkdir(parents=True)
 
-    patches = _common_stage_patches(job_dir, [{"id": "auto-001", "kind": "verse"}])
+    patches = _common_stage_patches(job_dir, {"sections": []})
     with (
         patches[0],
         patches[1],
@@ -507,11 +525,11 @@ def test_common_pipeline_skips_sections_when_the_user_turned_them_off(tmp_path: 
         patches[5],
         patches[6],
         patches[7],
-        patches[8] as detect,
+        patches[8] as analyze_stems_mock,
     ):
         _run_common(job, job_dir / "source.wav", job_dir)
 
-    detect.assert_not_called()
+    analyze_stems_mock.assert_not_called()
     assert job.sections is None
     assert job.sections_source is None
 
@@ -571,7 +589,7 @@ def test_common_pipeline_never_reanalyzes_existing_manual_sections(tmp_path: Pat
     )
     job_dir = tmp_path / job.id
     (job_dir / "stems").mkdir(parents=True)
-    patches = _common_stage_patches(job_dir, [{"id": "auto-001"}])
+    patches = _common_stage_patches(job_dir, {"sections": []})
 
     with (
         patches[0],
@@ -582,11 +600,11 @@ def test_common_pipeline_never_reanalyzes_existing_manual_sections(tmp_path: Pat
         patches[5],
         patches[6],
         patches[7],
-        patches[8] as detect,
+        patches[8] as analyze_stems_mock,
     ):
         _run_common(job, job_dir / "source.wav", job_dir)
 
-    detect.assert_not_called()
+    analyze_stems_mock.assert_not_called()
     assert job.sections == manual
     assert job.sections_source == "manual"
 
@@ -622,8 +640,21 @@ def test_section_flag_is_captured_at_submit_not_at_the_sections_stage(tmp_path: 
     job_dir = tmp_path / job.id
     (job_dir / "stems").mkdir(parents=True)
 
-    suggested = [{"id": "auto-001", "kind": "verse"}]
-    patches = _common_stage_patches(job_dir, suggested)
+    structure = {
+        "sections": [
+            {
+                "id": 1,
+                "label": "verse",
+                "start_time": 0.0,
+                "end_time": 60.0,
+                "start_bar": 1,
+                "end_bar": 32,
+                "duration_bars": 32,
+                "events": [],
+            }
+        ]
+    }
+    patches = _common_stage_patches(job_dir, structure)
     with (
         patches[0],
         patches[1],
@@ -633,12 +664,24 @@ def test_section_flag_is_captured_at_submit_not_at_the_sections_stage(tmp_path: 
         patches[5],
         patches[6],
         patches[7],
-        patches[8] as detect,
+        patches[8] as analyze_stems_mock,
         # The setting says off, the way it would after the user opened another
         # song while this import was still running.
         patch("app.core.settings.get_auto_sections", return_value=False),
     ):
         _run_common(job, job_dir / "source.wav", job_dir)
 
-    detect.assert_called_once()
-    assert job.sections == suggested
+    analyze_stems_mock.assert_called_once()
+    assert job.sections == [
+        {
+            "id": "structure-001",
+            "name": "Verse",
+            "start": 0.0,
+            "end": 60.0,
+            "color": "#8391a5",
+            "start_bar": 1,
+            "end_bar": 32,
+            "duration_bars": 32,
+            "events": [],
+        }
+    ]

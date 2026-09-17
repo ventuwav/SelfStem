@@ -89,3 +89,6 @@ Thumbs.db
 
 # Imported design references (kept local, not shipped)
 design/
+
+# Ephemeral logs/artifacts from running Codex locally
+.codex-run/

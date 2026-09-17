@@ -9,7 +9,7 @@ import {
   pitchResetBtn,
   pitchWrap,
   speedWrap,
-  rulerTime, wavesGrid, loopRegionEl, playheadMarker,
+  rulerTime, barRulerEl, wavesGrid, loopRegionEl, playheadMarker,
   multitrack, audioEngine, totalDuration, loopEnabled, loopStart, loopEnd, masterVolume,
   waveScroll, waveCanvas, multitrackContainer,
   presenceRulerEl, presencePlayheadEl,
@@ -153,6 +153,55 @@ export function buildRuler(durationSec) {
     grid.style.left = `${leftPct}%`;
     wavesGrid.appendChild(grid);
   }
+}
+
+// Bars a labelled tick must be spaced apart to stay readable; mirrors
+// MIN_TICK_PX's role for the time ruler above it.
+const MIN_BAR_LABEL_PX = 40;
+const BAR_LABEL_LADDER = [1, 2, 4, 8, 16, 32, 64];
+
+// Downbeats, not raw beats: for a 4/4 track this is one mark per bar, drawn
+// from the same beat grid the metronome and click track already use (see
+// isDownbeatIndex in beatgrid.js, which reads the meter -- including any
+// genuine meter *changes* -- from the sparse bar-change log the beat
+// tracker records, rather than assuming a fixed 4/4 for the whole track).
+export function buildBarRuler(durationSec) {
+  if (!barRulerEl) return;
+  barRulerEl.innerHTML = "";
+  if (!durationSec || durationSec <= 0) return;
+
+  const beats = getGridBeats();
+  if (beats.length < 2) return;
+
+  const downbeatTimes = [];
+  for (let i = 0; i < beats.length; i++) {
+    if (isDownbeatIndex(i)) downbeatTimes.push(beats[i]);
+  }
+  if (downbeatTimes.length < 2) return;
+
+  const contentWidthPx = barRulerEl.getBoundingClientRect().width || 0;
+  const pxPerBar = contentWidthPx / downbeatTimes.length;
+  let labelEvery = BAR_LABEL_LADDER[BAR_LABEL_LADDER.length - 1];
+  for (const n of BAR_LABEL_LADDER) {
+    if (n * pxPerBar >= MIN_BAR_LABEL_PX) {
+      labelEvery = n;
+      break;
+    }
+  }
+
+  const frag = document.createDocumentFragment();
+  for (let bar = 0; bar < downbeatTimes.length; bar++) {
+    const leftPct = (downbeatTimes[bar] / durationSec) * 100;
+    const labeled = bar % labelEvery === 0;
+    const el = document.createElement("div");
+    el.className = labeled ? "bar-tick labeled" : "bar-tick";
+    el.style.left = `${leftPct}%`;
+    if (labeled) {
+      el.innerHTML = `<span class="bar-tick-label">${bar + 1}</span>`;
+    }
+    frag.appendChild(el);
+  }
+  barRulerEl.appendChild(frag);
 }
 
 export function updatePlayheadMarker(currentSec) {
@@ -687,6 +736,9 @@ export function syncRulerScroll() {
   if (rulerTime && waveScroll) {
     rulerTime.style.transform = `translateX(${-waveScroll.scrollLeft}px)`;
   }
+  if (barRulerEl && waveScroll) {
+    barRulerEl.style.transform = `translateX(${-waveScroll.scrollLeft}px)`;
+  }
 }
 
 export function applyWaveZoom() {
@@ -756,6 +808,7 @@ export function setWaveZoomLevel(next, anchorClientX = null) {
   // detail on screen, the playhead and the loop region because buildRuler
   // rebuilds the elements they live in.
   buildRuler(totalDuration);
+  buildBarRuler(totalDuration);
   // buildRuler re-creates the marker element, so it comes back at 0. Put it
   // back where the transport actually is -- but only if something can say;
   // defaulting to 0 would yank the playhead to the start of the track.
@@ -794,6 +847,7 @@ function wireZoomButtons() {
         const next = tickStep(totalDuration, rulerTime?.getBoundingClientRect().width || 0);
         if (next !== _rulerStep) {
           buildRuler(totalDuration);
+          buildBarRuler(totalDuration);
           updateLoopRegionVisual();
         }
       });

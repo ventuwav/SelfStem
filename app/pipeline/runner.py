@@ -26,8 +26,8 @@ from app.pipeline.collect import (
 )
 from app.pipeline.download import download
 from app.pipeline.errors import classify_failure
-from app.pipeline.sections import detect_sections
 from app.pipeline.separate import separate
+from app.pipeline.structure import analyze_stems
 
 logger = logging.getLogger("selfstem.pipeline")
 
@@ -254,8 +254,15 @@ def _run_common(job: Job, source: Path, job_dir: Path) -> None:
     if job.auto_sections and job.sections is None and job.duration_sec and job.duration_sec > 0:
         _set(job, stage="Analyzing song structure...")
         try:
-            sections = detect_sections(job, stems_dir, job.duration_sec)
-            if sections:
+            structure = analyze_stems(
+                stems_dir, job.duration_sec, bpm=job.bpm, key=job.key, scale=job.scale
+            )
+            # Reuse the established editable sections data model.  The full
+            # evidence remains in structure.json; these are only its timeline
+            # suggestions and are never written over manual changes.
+            colors = {"intro": "#4a7fff", "groove": "#00c8a0", "build": "#ff8a20", "drop": "#9a4aff", "breakdown": "#2ab8e8", "outro": "#00d4d4"}
+            sections = [{"id": f"structure-{item['id']:03d}", "name": str(item["label"]).title(), "start": item["start_time"], "end": item["end_time"], "color": colors.get(item["label"], "#8391a5"), "start_bar": item["start_bar"], "end_bar": item["end_bar"], "duration_bars": item["duration_bars"], "events": item["events"]} for item in structure["sections"]]
+            if sections and job.sections is None:
                 _set(job, sections=sections, sections_source="automatic")
         except JobCancelled:
             raise

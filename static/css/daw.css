@@ -1550,6 +1550,10 @@ input, textarea { font-family: inherit; }
   overflow: hidden;
   user-select: none;
 }
+.section-detail { grid-column: 2; padding: 4px 8px 7px; color: var(--muted); font-size: 11px; display: grid; gap: 2px; }
+.section-detail strong { color: var(--text); font-size: 12px; }
+.section-detail small { font-size: 10px; }
+.section-detail.hidden { display: none; }
 
 /* Section blocks (sections.js populates) */
 .section-block {
@@ -1596,6 +1600,23 @@ input, textarea { font-family: inherit; }
 }
 .section-del:hover { opacity: 1; background: rgba(0,0,0,0.3); }
 .section-block:hover .section-del { display: flex; }
+
+.section-split, .section-merge {
+  display: none;
+  flex-shrink: 0;
+  width: 16px; height: 16px;
+  margin-right: 2px;
+  border: none; background: none;
+  color: var(--sc, #4a7fff);
+  font-size: 10px; line-height: 1;
+  cursor: pointer; border-radius: 3px;
+  align-items: center; justify-content: center;
+  opacity: 0.7;
+}
+.section-split:hover, .section-merge:hover { opacity: 1; background: rgba(0,0,0,0.3); }
+.section-block:hover .section-split,
+.section-block:hover .section-merge { display: flex; }
+.section-merge.disabled { opacity: 0.25; cursor: default; pointer-events: none; }
 
 .section-handle {
   position: absolute;
@@ -1815,6 +1836,39 @@ input, textarea { font-family: inherit; }
   position: absolute;
   top: -1px;
   transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Bar-number strip below the time ruler (buildBarRuler in transport.js).
+   Collapses to nothing when empty (no beat grid for this track) so the
+   ruler area doesn't reserve dead space on tracks we can't grid. */
+.lanes-ruler-bars {
+  position: relative;
+  height: 12px;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  line-height: 1;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+}
+.lanes-ruler-bars:empty { height: 0; border-top: none; }
+.daw .lanes-ruler-bars {
+  right: auto;
+  width: calc(100% * var(--zoom, 1));
+}
+.bar-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-left: 1px solid var(--border);
+  opacity: 0.45;
+}
+.bar-tick.labeled { opacity: 0.85; }
+.bar-tick-label {
+  position: absolute;
+  left: 2px;
+  top: 0;
+  white-space: nowrap;
   pointer-events: none;
 }
 

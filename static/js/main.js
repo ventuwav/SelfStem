@@ -646,6 +646,18 @@ function wireAppShellControls() {
 
 }
 
+// A structure block is a navigable musical range.  Keep this wiring here,
+// beside the transport, so the sections module stays a persistence/editor UI.
+window.addEventListener("selfstem:section-select", (event) => {
+  const { start, end } = event.detail || {};
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) return;
+  setLoopStart(start);
+  setLoopEnd(end);
+  if (!loopEnabled) loopBtn.click();
+  setPlayheadTime(start);
+  updateLoopRegionVisual();
+});
+
 // ─── Keyboard shortcuts ───
 
 document.addEventListener("keydown", (e) => {

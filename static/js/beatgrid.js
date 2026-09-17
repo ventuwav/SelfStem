@@ -404,12 +404,20 @@ function _render() {
 
 function _isDownbeat(i) {
   if (!_bars.length) return false;
-  let mark = null;
+  // _bars is a sparse meter-*change* log (see
+  // app/pipeline/beatgrid.py::_downbeats_to_bars): a steady 4/4 track gets a
+  // single mark, wherever in the track the detector first became confident,
+  // not necessarily near beat 0. Default to that first mark and extrapolate
+  // its meter backward so beats before it still land on a bar grid, instead
+  // of silently reporting no downbeats at all for the start of the track
+  // (bug: a first mark at ~beat 65 meant beats 0-64 never accented and never
+  // got a bar number, dropping the intro from both the metronome and the
+  // bar-number ruler/manual-editing bar math).
+  let mark = _bars[0];
   for (const b of _bars) {
     if (b.beat <= i) mark = b;
     else break;
   }
-  if (!mark) return false;
   return (i - mark.beat) % mark.beats_per_bar === 0;
 }
 
@@ -596,3 +604,63 @@ export const getBeatGridSnap = () => _snap;
 export const getAnchors = () => [..._anchors].sort((a, b) => a - b);
 export const getBeats = () => _beats.slice();
 export const getBars = () => _bars.map((b) => ({ ...b }));
+
+// Fixed 4/4 stride, deliberately not reading meter from _bars at all. Tried
+// two smarter versions first -- following _isDownbeat's per-region meter
+// live, then picking the log's single most common beats_per_bar -- and both
+// broke on a real track where the detector misreads long stretches as 2/4:
+// following it live nearly doubled the bar count in those stretches (112
+// bars over 120 s instead of ~64); picking the "most common" value picked
+// the noisy 2 instead of the real 4, which doubled the ENTIRE track's count
+// (437 instead of ~220). _bars is reliable enough for the metronome accent
+// (isDownbeatIndex, which a listener notices only as an occasional missed
+// click) but not reliable enough to be a bar count. This matches
+// app/structure_analyzer.py's own build_bar_grid fallback on the backend
+// (beats[::meter], meter defaulting to 4), so the two don't silently
+// disagree about what bar a given timestamp is in.
+const BAR_STRIDE_BEATS = 4;
+
+/** Downbeat times for "what bar is this timestamp in" -- shared by the
+ *  bar-number ruler and manual section editing so they never disagree with
+ *  each other. Constant 4/4 stride from beat 0; see BAR_STRIDE_BEATS for
+ *  why this doesn't read the per-track meter log. */
+export function getDownbeatTimes() {
+  if (_beats.length < 2) return [];
+  const out = [];
+  for (let i = 0; i < _beats.length; i += BAR_STRIDE_BEATS) out.push(_beats[i]);
+  return out;
+}
+
+/** 1-indexed, inclusive start_bar/end_bar/duration_bars for an arbitrary
+ *  [startSec, endSec) time range, snapped to the nearest bar this section's
+ *  edges fall in. Returns null when there's no usable beat grid (e.g. a
+ *  purely manual section on a track with no detected beats) -- callers
+ *  should clear any stale bar fields in that case rather than keep numbers
+ *  that no longer describe the current start/end. */
+export function barRangeForTime(startSec, endSec) {
+  const downbeats = getDownbeatTimes();
+  if (downbeats.length < 2) return null;
+
+  // Index of the last downbeat at or before `t` (floor), clamped so a time
+  // before the first downbeat still lands on bar 1.
+  const floorBarIndex = (t) => {
+    let idx = 0;
+    for (let i = 0; i < downbeats.length; i++) {
+      if (downbeats[i] <= t + 1e-6) idx = i;
+      else break;
+    }
+    return idx;
+  };
+
+  const startIdx = floorBarIndex(startSec);
+  // endSec is an exclusive boundary; back off a hair so a section ending
+  // exactly on a downbeat counts the bar before it, not the one starting
+  // right there (which the section doesn't actually contain any of).
+  const endIdx = Math.max(startIdx, floorBarIndex(Math.max(startSec, endSec - 1e-3)));
+
+  return {
+    start_bar: startIdx + 1,
+    end_bar: endIdx + 1,
+    duration_bars: endIdx - startIdx + 1,
+  };
+}

@@ -411,7 +411,18 @@ def sweep_orphaned_workspaces(jobs_dir: Path) -> int:
 
 
 def detect_sections(job: Job, stems_dir: Path, duration: float) -> list[dict] | None:
-    """Return automatic section suggestions, or None when analysis is unavailable."""
+    """Return automatic section suggestions, or None when analysis is unavailable.
+
+    NOT CALLED from the pipeline as of the deterministic structure analyzer
+    (app/structure_analyzer.py + app/pipeline/structure.py::analyze_stems),
+    which replaced this as runner.py's automatic-sections stage. Kept intact
+    (and still covered by tests/test_pipeline_sections.py) as a rollback path:
+    if the new analyzer needs to be backed out, swap runner.py's
+    `from app.pipeline.structure import analyze_stems` back to
+    `from app.pipeline.sections import detect_sections` and restore the old
+    call site (see git history around the "Rebrand fork" / structure-analyzer
+    commits for the exact diff).
+    """
     if job.cancel_requested:
         raise JobCancelled()
     required = [stems_dir / f"{name}.wav" for name in ("bass", "drums", "vocals")]

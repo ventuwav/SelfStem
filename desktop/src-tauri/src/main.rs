@@ -4652,7 +4652,7 @@ mod tests {
         // bytes arrived intact, not that they came from us. apply_app_update
         // then extracts the result over SelfStem's own executable (#510).
         for ok in [
-            "https://github.com/selfstemapp/selfstem/releases/download/v0.16.1/x.zip",
+            "https://github.com/ventuwav/SelfStem/releases/download/v0.16.1/x.zip",
             "https://objects.githubusercontent.com/github-production-release-asset/1/2",
         ] {
             assert!(super::validate_release_url(ok).is_ok(), "should allow {ok}");
@@ -4665,7 +4665,7 @@ mod tests {
             "https://notgithub.com/x.zip",
             // Plain http would let a LAN attacker swap the bytes in flight,
             // which matters because the page itself is served over http.
-            "http://github.com/selfstemapp/selfstem/releases/download/v1/x.zip",
+            "http://github.com/ventuwav/SelfStem/releases/download/v1/x.zip",
             "file:///etc/passwd",
             "not a url",
         ] {

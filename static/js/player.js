@@ -41,7 +41,7 @@ import {
   applyAllLanePitches, setLaneKeysAvailable,
 } from "./mixer.js";
 import {
-  buildRuler, updatePlayheadMarker, updateLoopRegionVisual,
+  buildRuler, buildBarRuler, updatePlayheadMarker, updateLoopRegionVisual,
   applyWaveZoom, resetWaveZoom, WAVE_ZOOM_MAX,
   buildPresenceRuler, buildFooterWaveTicks, updateFooterTimes,
   updatePresencePlayhead, resetSpeed, resetPitch, updatePitchAvailability,
@@ -1307,6 +1307,7 @@ export function wireUpAudio(jobId, stems, duration, thumbnail, mixUrl = null, ti
     if (!totalDuration) setTotalDuration(mt.getDuration() || 0);
     timeEl.textContent = `00:00 / ${fmtTime(totalDuration)}`;
     buildRuler(totalDuration);
+    buildBarRuler(totalDuration);
     buildPresenceRuler(totalDuration);
     buildFooterWaveTicks(totalDuration);
     updateFooterTimes(0);
@@ -1500,6 +1501,7 @@ export function wireUpAudio(jobId, stems, duration, thumbnail, mixUrl = null, ti
                 setMetronomeHasBars(Array.isArray(nextBars) && nextBars.length > 0);
                 applyMetronomeAccent();
                 syncBeatGridButtons();
+                buildBarRuler(totalDuration);
               },
             });
             setBeatGridAvailable(!!editable && !!m);
@@ -1507,6 +1509,7 @@ export function wireUpAudio(jobId, stems, duration, thumbnail, mixUrl = null, ti
             // One place decides how accents are driven; the panel's Accent
             // setting can override the detected bar marks.
             applyMetronomeAccent();
+            buildBarRuler(totalDuration);
           });
           if (kind === "chunked") {
             // Streaming path: the engine holds no full buffers. Overview waveforms

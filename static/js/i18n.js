@@ -763,6 +763,8 @@ const en = {
   "sections.saving": "Saving",
   "sections.saved": "Saved",
   "sections.deleteAria": "Delete section",
+  "sections.splitAria": "Split section at playhead",
+  "sections.mergeAria": "Merge with next section",
   "sections.defaultName": "Section",
 
   // ── Playlist import confirm (static/js/playlist.js) ──

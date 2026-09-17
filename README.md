@@ -5,18 +5,18 @@
 **Free, local stem separation. No account. No upload. No subscription.**
 
 <div align="center">
-  <a href="https://github.com/selfstemapp/selfstem/actions/workflows/ci.yml"><img src="https://github.com/selfstemapp/selfstem/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/selfstemapp/selfstem/stargazers"><img src="https://img.shields.io/github/stars/selfstemapp/selfstem?style=flat-square" alt="GitHub Stars"></a>
-  <a href="https://github.com/selfstemapp/selfstem/releases"><img src="https://img.shields.io/github/downloads/selfstemapp/selfstem/total?style=flat-square&color=52c65f" alt="Total Downloads"></a>
-  <a href="https://github.com/selfstemapp/selfstem/releases/latest"><img src="https://img.shields.io/github/v/release/selfstemapp/selfstem?style=flat-square" alt="Latest Release"></a>
-  <a href="https://github.com/selfstemapp/selfstem/blob/main/LICENSE"><img src="https://img.shields.io/github/license/selfstemapp/selfstem?style=flat-square" alt="License"></a>
+  <a href="https://github.com/ventuwav/SelfStem/actions/workflows/ci.yml"><img src="https://github.com/ventuwav/SelfStem/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/ventuwav/SelfStem/stargazers"><img src="https://img.shields.io/github/stars/ventuwav/SelfStem?style=flat-square" alt="GitHub Stars"></a>
+  <a href="https://github.com/ventuwav/SelfStem/releases"><img src="https://img.shields.io/github/downloads/ventuwav/SelfStem/total?style=flat-square&color=52c65f" alt="Total Downloads"></a>
+  <a href="https://github.com/ventuwav/SelfStem/releases/latest"><img src="https://img.shields.io/github/v/release/ventuwav/SelfStem?style=flat-square" alt="Latest Release"></a>
+  <a href="https://github.com/ventuwav/SelfStem/blob/main/LICENSE"><img src="https://img.shields.io/github/license/ventuwav/SelfStem?style=flat-square" alt="License"></a>
 </div>
 
 <br>
 
 <p align="center"><sub>JOIN THE COMMUNITY</sub></p>
 <div align="center">
-  <a href="https://github.com/selfstemapp/selfstem"><img src="https://img.shields.io/badge/GitHub-selfstemapp-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub"></a>
+  <a href="https://github.com/ventuwav/SelfStem"><img src="https://img.shields.io/badge/GitHub-ventuwav-181717?style=flat-square&logo=github&logoColor=white" alt="GitHub"></a>
   <a href="https://discord.gg/YhCKsjhcwB"><img src="https://img.shields.io/badge/Discord-Join-5865F2?style=flat-square&logo=discord&logoColor=white" alt="Discord"></a>
   <a href="https://www.reddit.com/r/SelfStemApp/"><img src="https://img.shields.io/badge/Reddit-r%2FSelfStemApp-FF4500?style=flat-square&logo=reddit&logoColor=white" alt="Reddit"></a>
   <a href="https://www.instagram.com/selfstem"><img src="https://img.shields.io/badge/Instagram-selfstem-E4405F?style=flat-square&logo=instagram&logoColor=white" alt="Instagram"></a>
@@ -39,11 +39,11 @@ Drop in an MP3, WAV, FLAC, OGG/Opus, MP4, or M4A file, or paste a YouTube URL, a
 
 ## Star History
 
-<a href="https://www.star-history.com/?repos=selfstemapp%2Fselfstem&type=date&legend=top-left">
+<a href="https://www.star-history.com/?repos=ventuwav%2FSelfStem&type=date&legend=top-left">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=selfstemapp/selfstem&type=date&theme=dark&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=selfstemapp/selfstem&type=date&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=selfstemapp/selfstem&type=date&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=ventuwav/SelfStem&type=date&theme=dark&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=ventuwav/SelfStem&type=date&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=ventuwav/SelfStem&type=date&legend=top-left&sealed_token=ZCLzbiDb9k7qGcBlGZ4Y7ztZz0mepkiAVraLOc4qeVQjSM_MfPIQD7P9n2wvwBM8mw8EKfkSAQfM2vByzi3mEPklzgSWtYnVzZsfexzb7LxwoATlrgSmWesQiwczpg4xa32nF4_Np1Qpe62s5eFsl0o46JzPuwwd5M6pwShbj1PfDMFD4b0Yuu0jH3rD" />
  </picture>
 </a>
 
@@ -123,7 +123,7 @@ If you need speed, quality, mobile access, or the extra musician tooling, the co
 
 ## Download
 
-Pre-built installers and zips are attached to each [GitHub Release](https://github.com/selfstemapp/selfstem/releases).
+Pre-built installers and zips are attached to each [GitHub Release](https://github.com/ventuwav/SelfStem/releases).
 
 **macOS**
 
@@ -212,7 +212,7 @@ Python 3.12 or newer, `ffmpeg` on your PATH, and [uv](https://github.com/astral-
 #### macOS / Linux (one-shot)
 
 ```sh
-git clone https://github.com/selfstemapp/selfstem selfstem && cd selfstem
+git clone https://github.com/ventuwav/SelfStem selfstem && cd selfstem
 ./run.sh setup     # installs ffmpeg + uv, runs uv sync
 ./run.sh start
 ```
@@ -228,7 +228,7 @@ Install prerequisites:
 - [ffmpeg](https://ffmpeg.org/download.html) — `winget install Gyan.FFmpeg` (or Chocolatey: `choco install ffmpeg`)
 
 ```powershell
-git clone https://github.com/selfstemapp/selfstem selfstem; cd selfstem
+git clone https://github.com/ventuwav/SelfStem selfstem; cd selfstem
 uv sync
 uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --timeout-graceful-shutdown 5
 ```
@@ -250,7 +250,7 @@ uv run uvicorn app.main:app --host 127.0.0.1 --port 8000 --timeout-graceful-shut
 #### Manual (any platform)
 
 ```sh
-git clone https://github.com/selfstemapp/selfstem selfstem && cd selfstem
+git clone https://github.com/ventuwav/SelfStem selfstem && cd selfstem
 uv sync
 uv run uvicorn app.main:app --reload --timeout-graceful-shutdown 5
 ```
@@ -275,7 +275,7 @@ docker run -d --name selfstem -p 8000:8000 \
   -v /path/to/jobs:/app/jobs \
   -v /path/to/cache:/cache \
   -e SELFSTEM_PERSIST_LIBRARY=1 \
-  ghcr.io/selfstemapp/selfstem:edge
+  ghcr.io/ventuwav/selfstem:edge
 ```
 
 On a Linux host with an NVIDIA GPU (driver + NVIDIA Container Toolkit installed), add `--runtime=nvidia -e NVIDIA_VISIBLE_DEVICES=all` and SelfStem auto-detects CUDA. The image already bundles CUDA-enabled torch, so no separate CUDA install is needed.
@@ -428,7 +428,7 @@ FFmpeg is a GPL build. SelfStem downloads it and runs it as a separate executabl
 
 | Platform | Link |
 |---|---|
-| GitHub | [selfstemapp/selfstem](https://github.com/selfstemapp/selfstem) |
+| GitHub | [ventuwav/SelfStem](https://github.com/ventuwav/SelfStem) |
 | Discord | [discord.gg/YhCKsjhcwB](https://discord.gg/YhCKsjhcwB) |
 | Reddit | [r/SelfStemApp](https://www.reddit.com/r/SelfStemApp/) |
 | Instagram | [@selfstem](https://www.instagram.com/selfstem) |

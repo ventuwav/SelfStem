@@ -1,6 +1,8 @@
 // sections.js — interactive sections bar above the waveform
 
 import { onLanguageChange, t } from "./i18n.js";
+import { barRangeForTime } from "./beatgrid.js";
+import { transport } from "./transport.js";
 
 const SECTION_COLORS = [
   "#4a7fff",
@@ -95,9 +97,13 @@ function _makeSectionEl(section) {
   el.dataset.id = section.id;
   el.style.cssText = `left:${pctStart.toFixed(4)}%;width:${pctWidth.toFixed(4)}%;--sc:${section.color}`;
 
+  const hasRightNeighbor = _sections.some((o) => o.id !== section.id && Math.abs(o.start - section.end) < 1e-3);
+
   el.innerHTML = `
     <div class="section-handle section-handle-l" data-edge="left"></div>
     <span class="section-label">${_esc(sectionDisplayName(section, _sections))}</span>
+    <button class="section-split" type="button" aria-label="${t("sections.splitAria")}" title="${t("sections.splitAria")}" tabindex="-1">⎪⎪</button>
+    <button class="section-merge${hasRightNeighbor ? "" : " disabled"}" type="button" aria-label="${t("sections.mergeAria")}" title="${t("sections.mergeAria")}" tabindex="-1">⇥</button>
     <button class="section-del" type="button" aria-label="${t("sections.deleteAria")}" tabindex="-1">×</button>
     <div class="section-handle section-handle-r" data-edge="right"></div>
   `;
@@ -107,9 +113,24 @@ function _makeSectionEl(section) {
     _deleteSection(section.id);
   });
 
+  el.querySelector(".section-split").addEventListener("click", (e) => {
+    e.stopPropagation();
+    _splitSectionAtPlayhead(section.id);
+  });
+
+  el.querySelector(".section-merge").addEventListener("click", (e) => {
+    e.stopPropagation();
+    _mergeWithRightNeighbor(section.id);
+  });
+
   el.querySelector(".section-label").addEventListener("dblclick", (e) => {
     e.stopPropagation();
     _openRename(section.id, el.querySelector(".section-label"));
+  });
+  el.addEventListener("click", (e) => {
+    if (e.target.closest(".section-handle,.section-del")) return;
+    _showDetails(section);
+    window.dispatchEvent(new CustomEvent("selfstem:section-select", { detail: { start: section.start, end: section.end } }));
   });
 
   _wireDrag(el, section);
@@ -118,6 +139,19 @@ function _makeSectionEl(section) {
   }
 
   return el;
+}
+
+function _showDetails(section) {
+  const detail = document.getElementById("sectionDetail");
+  if (!detail) return;
+  const bars = section.start_bar ? `Bars ${section.start_bar}–${section.end_bar} · ${section.duration_bars} bars` : "Manual section";
+  const events = (section.events || []).map((event) => {
+    const range = event.bar_end ? `${event.bar_start}–${event.bar_end}` : (event.bar || event.bar_start);
+    const label = String(event.type || "").replaceAll("_", " ");
+    return `Bar ${range} — ${label}${event.stem ? ` (${event.stem})` : ""}`;
+  }).join("<br>");
+  detail.innerHTML = `<strong>${_esc(sectionDisplayName(section, _sections))}</strong><span>${_esc(bars)}</span>${events ? `<small>${events}</small>` : ""}`;
+  detail.classList.remove("hidden");
 }
 
 export function sectionDisplayName(section, all) {
@@ -185,7 +219,10 @@ function _wireDrag(el, section) {
     if (!active) return;
     active = false;
     el.classList.remove("sec-dragging");
-    if (changed) _scheduleSave();
+    if (changed) {
+      _syncBarFields(section);
+      _scheduleSave();
+    }
   });
 
   el.addEventListener("pointercancel", () => {
@@ -251,7 +288,10 @@ function _wireResize(handle, el, section) {
     if (!active) return;
     active = false;
     el.classList.remove("sec-resizing");
-    if (changed) _scheduleSave();
+    if (changed) {
+      _syncBarFields(section);
+      _scheduleSave();
+    }
   });
 
   handle.addEventListener("pointercancel", () => {
@@ -329,6 +369,7 @@ function _addSection() {
 
   const color = _nextColor();
   const section = { id: _nextId(), name: t("sections.defaultName"), start, end, color };
+  _syncBarFields(section);
   _sections.push(section);
   _render();
   _scheduleSave();
@@ -391,6 +432,50 @@ export function clearAllSections() {
 
 function _deleteSection(id) {
   _sections = _sections.filter((s) => s.id !== id);
+  _render();
+  _scheduleSave();
+}
+
+// Splits at the current playhead, mirroring the "split at playhead" idiom
+// every DAW uses -- no dialog needed, the user just seeks first (clicking
+// the ribbon or the waveform already does that via selfstem:section-select
+// and normal transport seeking).
+function _splitSectionAtPlayhead(id) {
+  const section = _sections.find((s) => s.id === id);
+  if (!section) return;
+  const playhead = transport()?.getCurrentTime?.();
+  if (typeof playhead !== "number" || !Number.isFinite(playhead)) return;
+  const at = Math.max(section.start + MIN_SEC, Math.min(section.end - MIN_SEC, playhead));
+  if (at <= section.start || at >= section.end) return; // no room for two >= MIN_SEC halves
+
+  const right = { ...section, id: _nextId(), start: at, color: _nextColor() };
+  section.end = at;
+  _syncBarFields(section);
+  _syncBarFields(right);
+  _sections.push(right);
+  _render();
+  _scheduleSave();
+}
+
+// Merges this section with whichever neighbor starts exactly where it ends.
+// Two-way (also checked from the neighbor's own button, since either side
+// of a shared boundary can trigger the merge) so it works whichever half
+// the user happens to click.
+function _mergeWithRightNeighbor(id) {
+  const section = _sections.find((s) => s.id === id);
+  if (!section) return;
+  const neighbor = _sections.find((o) => o.id !== id && Math.abs(o.start - section.end) < 1e-3);
+  if (!neighbor) return;
+
+  section.end = neighbor.end;
+  // Keep whichever automatic-analysis metadata belongs to the now-larger
+  // span rather than silently dropping it; a manual rename already cleared
+  // `kind` on either half, so this only matters for automatic sections.
+  const mergedElements = new Set([...(section.elements || []), ...(neighbor.elements || [])]);
+  if (mergedElements.size) section.elements = [...mergedElements];
+  section.events = [...(section.events || []), ...(neighbor.events || [])];
+  _syncBarFields(section);
+  _sections = _sections.filter((s) => s.id !== neighbor.id);
   _render();
   _scheduleSave();
 }
@@ -509,6 +594,23 @@ async function _sendSave(id, body) {
 
 function _timesChanged(beforeStart, beforeEnd, afterStart, afterEnd) {
   return Math.abs(beforeStart - afterStart) > 1e-6 || Math.abs(beforeEnd - afterEnd) > 1e-6;
+}
+
+// Recompute start_bar/end_bar/duration_bars from the section's current
+// start/end whenever those change by hand (drag, resize, split, merge, new
+// section). Without this a manual edit leaves the bar fields describing the
+// section's *previous* time range -- stale numbers are worse than none, so
+// on tracks with no usable beat grid the fields are removed outright rather
+// than left behind.
+function _syncBarFields(section) {
+  const range = barRangeForTime(section.start, section.end);
+  if (range) {
+    Object.assign(section, range);
+  } else {
+    delete section.start_bar;
+    delete section.end_bar;
+    delete section.duration_bars;
+  }
 }
 
 // ─── Utilities ────────────────────────────────────────────

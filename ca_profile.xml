@@ -6,7 +6,7 @@
     practice and transcription. This repository maintains the official SelfStem
     self-hosted server container. For help, open an issue on GitHub.
   </Profile>
-  <Icon>https://raw.githubusercontent.com/selfstemapp/selfstem/main/desktop/src-tauri/icons/icon.png</Icon>
-  <WebPage>https://github.com/selfstemapp/selfstem</WebPage>
-  <Forum>https://github.com/selfstemapp/selfstem/issues</Forum>
+  <Icon>https://raw.githubusercontent.com/ventuwav/SelfStem/main/desktop/src-tauri/icons/icon.png</Icon>
+  <WebPage>https://github.com/ventuwav/SelfStem</WebPage>
+  <Forum>https://github.com/ventuwav/SelfStem/issues</Forum>
 </CommunityApplications>

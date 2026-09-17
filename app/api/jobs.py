@@ -11,7 +11,7 @@ import subprocess
 import threading
 import uuid
 from pathlib import Path
-from typing import Literal
+from typing import Any, Literal
 
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse, Response
@@ -41,6 +41,7 @@ from app.pipeline.collect import merge_stem_peaks, presence_for_split
 from app.pipeline.download import InvalidYouTubeURL, validate_youtube_url
 from app.pipeline.errors import classify_failure
 from app.pipeline.runner import _pipeline_lock
+from app.pipeline.structure import analyze_stems
 from app.pipeline.vocal_split import split_vocals
 
 router = APIRouter(tags=["jobs"])
@@ -466,6 +467,16 @@ class SectionItem(BaseModel):
         Literal["intro", "outro", "break", "bridge", "inst", "solo", "verse", "chorus", "part"]
         | None
     ) = None
+    # Deterministic-analyzer metadata (app/structure_analyzer.py). Optional so
+    # a purely manual section (no beat grid, or one the analyzer never saw)
+    # still validates -- but the fields must exist on this model at all, or
+    # every PATCH here (drag, resize, rename, delete, split, merge -- the
+    # editor always round-trips the *whole* section list) silently strips
+    # this metadata from every section, not just the one being edited.
+    start_bar: int | None = None
+    end_bar: int | None = None
+    duration_bars: int | None = None
+    events: list[dict[str, Any]] | None = None
 
     @field_validator("id")
     @classmethod
@@ -540,6 +551,35 @@ def update_sections(job_id: str, body: SectionsBody) -> dict:
         registry_persist(JOBS_DIR)
 
     return {"job_id": job_id, "sections": validated, "sections_source": "manual"}
+
+
+@router.get("/{job_id}/structure")
+def get_structure(job_id: str) -> Response:
+    """Return the cached deterministic structure analysis for a completed job."""
+    job = registry_get(job_id)
+    path = JOBS_DIR / job_id / "stems" / "structure.json"
+    if job is None or job.status != "done" or not path.is_file():
+        raise HTTPException(status_code=404, detail="structure analysis not found")
+    try:
+        return JSONResponse(json.loads(path.read_text(encoding="utf-8")), headers={"Cache-Control": "no-store"})
+    except (OSError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=404, detail="structure analysis not found") from exc
+
+
+@router.post("/{job_id}/structure")
+async def reanalyze_structure(job_id: str) -> dict:
+    """Re-run deterministic analysis without touching manually edited sections."""
+    job = registry_get(job_id)
+    if job is None or job.status != "done" or job.duration_sec is None:
+        raise HTTPException(status_code=404, detail="job not ready")
+    stems = (JOBS_DIR / job_id / "stems").resolve()
+    if not stems.is_relative_to(JOBS_DIR.resolve()):
+        raise HTTPException(status_code=404, detail="job not found")
+    try:
+        result = await asyncio.to_thread(analyze_stems, stems, job.duration_sec, bpm=job.bpm, key=job.key, scale=job.scale)
+    except (OSError, ValueError, RuntimeError) as exc:
+        raise HTTPException(status_code=422, detail=f"structure analysis failed: {exc}") from exc
+    return result
 
 
 # Upper bound on an edited grid. A 20-minute track at 300 BPM is ~6000 beats;

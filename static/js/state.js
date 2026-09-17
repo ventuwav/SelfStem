@@ -43,6 +43,7 @@ export const mixerEl = $("mixer");
 export const multitrackContainer = $("multitrack-container");
 export const wavesGrid = $("waves-grid");
 export const rulerTime = $("ruler-time");
+export const barRulerEl = $("ruler-bars");
 export const loopRegionEl = $("loop-region");
 export const playheadMarker = document.querySelector(".playhead-marker");
 export const waveScroll = $("wave-scroll");

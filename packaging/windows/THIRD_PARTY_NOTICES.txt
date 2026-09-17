@@ -93,5 +93,5 @@ build is:
     https://github.com/BtbN/FFmpeg-Builds
 
 If either link stops resolving, open an issue at
-https://github.com/selfstemapp/selfstem/issues and the source will be
+https://github.com/ventuwav/SelfStem/issues and the source will be
 provided by another means.
